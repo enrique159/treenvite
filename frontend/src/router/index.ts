@@ -6,6 +6,11 @@ const router = createRouter({
   scrollBehavior: () => ({ top: 0 }),
   routes: [
     {
+      path: '/',
+      name: 'home',
+      component: () => import('../views/HomeView.vue'),
+    },
+    {
       path: '/terminos',
       name: 'terms',
       component: () => import('../views/LegalView.vue'),
@@ -39,34 +44,43 @@ const router = createRouter({
     },
     { path: '/invitations/:token', name: 'invitation', component: () => import('../views/InvitationView.vue') },
     {
-      path: '/',
+      path: '/events',
       component: () => import('../layouts/AppLayout.vue'),
       meta: { requiresAuth: true },
       children: [
-        { path: '', redirect: '/events' },
-        { path: 'account', name: 'account', component: () => import('../views/AccountSettingsView.vue') },
-        { path: 'events', name: 'events', component: () => import('../views/events/EventsView.vue') },
-        { path: 'events/new', name: 'event-new', component: () => import('../views/events/EventFormView.vue') },
-        { path: 'events/:eventId', redirect: (route) => `/events/${String(route.params.eventId)}/guests` },
+        { path: '', name: 'events', component: () => import('../views/events/EventsView.vue') },
+        { path: 'new', name: 'event-new', component: () => import('../views/events/EventFormView.vue') },
+        { path: ':eventId', redirect: (route) => `/events/${String(route.params.eventId)}/guests` },
         {
-          path: 'events/:eventId/guests',
+          path: ':eventId/guests',
           name: 'event-guests',
           component: () => import('../views/events/EventGuestsView.vue'),
         },
         {
-          path: 'events/:eventId/tree',
+          path: ':eventId/tree',
           name: 'event-tree',
           component: () => import('../views/events/EventTreeView.vue'),
         },
         {
-          path: 'events/:eventId/settings',
+          path: ':eventId/settings',
           name: 'event-settings',
           component: () => import('../views/events/EventSettingsView.vue'),
         },
-        { path: 'join', name: 'join', component: () => import('../views/JoinEventView.vue') },
       ],
     },
-    { path: '/:pathMatch(.*)*', redirect: '/events' },
+    {
+      path: '/account',
+      component: () => import('../layouts/AppLayout.vue'),
+      meta: { requiresAuth: true },
+      children: [{ path: '', name: 'account', component: () => import('../views/AccountSettingsView.vue') }],
+    },
+    {
+      path: '/join',
+      component: () => import('../layouts/AppLayout.vue'),
+      meta: { requiresAuth: true },
+      children: [{ path: '', name: 'join', component: () => import('../views/JoinEventView.vue') }],
+    },
+    { path: '/:pathMatch(.*)*', redirect: '/' },
   ],
 })
 

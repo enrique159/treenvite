@@ -20,10 +20,10 @@ const intro = computed(() =>
   <div class="min-h-screen bg-base-200">
     <header class="border-b border-base-300 bg-base-100">
       <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
-        <RouterLink :to="auth.user ? '/events' : '/auth/login'" aria-label="Volver a Treenvite">
-          <span class="font-display text-2xl text-secondary">treen<span class="text-primary">vite</span></span>
+        <RouterLink :to="auth.user ? '/events' : '/'" aria-label="Volver a Treenvite">
+          <span class="font-display text-2xl text-secondary">Treen<span class="text-primary">vite</span></span>
         </RouterLink>
-        <RouterLink :to="auth.user ? '/events' : '/auth/login'" class="btn btn-ghost btn-sm">
+        <RouterLink :to="auth.user ? '/events' : '/'" class="btn btn-ghost btn-sm">
           {{ auth.user ? 'Volver a la plataforma' : 'Volver al inicio' }}
         </RouterLink>
       </div>
@@ -42,11 +42,6 @@ const intro = computed(() =>
         class="card border border-base-300 bg-base-100 shadow-sm [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-normal [&_h2]:leading-tight [&_h2]:text-secondary [&_p]:leading-7 [&_p]:opacity-75"
       >
         <div class="card-body max-w-none text-sm sm:text-base">
-          <p class="!opacity-100 rounded-xl bg-primary/10 p-4 text-sm">
-            Este documento es una base informativa para la operación de Treenvite. Antes de publicar el servicio,
-            completa la identidad legal y los datos de contacto de la persona responsable y somételo a revisión legal
-            según el país donde opere la plataforma.
-          </p>
           <h2>1. Aceptación</h2>
           <p>
             Al crear una cuenta o utilizar Treenvite aceptas estos términos y el Aviso de privacidad. Si no estás de
@@ -54,9 +49,10 @@ const intro = computed(() =>
           </p>
           <h2>2. El servicio</h2>
           <p>
-            Treenvite permite crear eventos, organizar invitados en una tabla o árbol, colaborar con otras personas,
-            acceder temporalmente mediante códigos y exportar información en formato CSV. Algunas funciones pueden
-            depender de servicios de correo, autenticación de Google o de la disponibilidad de la infraestructura.
+            Treenvite, operado por Enrique Marín Hirales, permite crear eventos, organizar invitados en una tabla o
+            árbol, colaborar con otras personas, acceder temporalmente mediante códigos y exportar información en
+            formato CSV. Algunas funciones pueden depender de servicios de correo, autenticación de Google o de la
+            disponibilidad de la infraestructura.
           </p>
           <h2>3. Tu cuenta</h2>
           <p>
@@ -99,8 +95,9 @@ const intro = computed(() =>
           <h2>9. Cambios y contacto</h2>
           <p>
             Podemos actualizar estos términos para reflejar cambios en el servicio o en la normativa. Publicaremos la
-            versión vigente en esta página. Para preguntas sobre estos términos, utiliza el canal de contacto que se
-            configure para Treenvite antes de la publicación del servicio.
+            versión vigente en esta página. Para preguntas sobre estos términos, escribe a
+            <a class="link link-primary" href="mailto:enrique159624873@gmail.com">enrique159624873@gmail.com</a>. Estos
+            términos se interpretarán conforme a las leyes aplicables de los Estados Unidos Mexicanos.
           </p>
         </div>
       </article>
@@ -110,69 +107,124 @@ const intro = computed(() =>
         class="card border border-base-300 bg-base-100 shadow-sm [&_h2]:mt-8 [&_h2]:font-display [&_h2]:text-2xl [&_h2]:font-normal [&_h2]:leading-tight [&_h2]:text-secondary [&_p]:leading-7 [&_p]:opacity-75"
       >
         <div class="card-body max-w-none text-sm sm:text-base">
-          <p class="!opacity-100 rounded-xl bg-primary/10 p-4 text-sm">
-            Este aviso es una base informativa. Completa antes de publicar el nombre o razón social, domicilio,
-            jurisdicción, correo de privacidad y demás datos exigidos por la normativa aplicable.
-          </p>
-          <h2>1. Responsable</h2>
+          <h2>1. Identidad y domicilio del responsable</h2>
           <p>
-            El responsable del tratamiento será la persona o entidad que opere Treenvite. En la versión pública de este
-            aviso se identificarán su nombre o razón social, domicilio y el correo destinado a solicitudes de
-            privacidad.
+            Enrique Marín Hirales, persona física, es responsable del tratamiento de los datos personales relacionados
+            con las cuentas y la operación de Treenvite. Su domicilio para oír y recibir notificaciones es Iztaccíhuatl
+            número 568, colonia Nueva Puesta del Sol, código postal 23095, La Paz, Baja California Sur, México. El
+            correo de privacidad y atención de derechos ARCO es
+            <a class="link link-primary" href="mailto:enrique159624873@gmail.com">enrique159624873@gmail.com</a>.
           </p>
-          <h2>2. Datos que podemos tratar</h2>
+          <h2>2. Alcance y datos de invitados</h2>
           <p>
-            Podemos tratar tu nombre, correo electrónico, avatar, identidad de Google cuando eliges ese acceso y los
-            datos necesarios para autenticar la cuenta. También tratamos la información que tú o tus colaboradores
-            incorporan a un evento, como nombres de invitados, correos, teléfonos, grupos, relaciones, confirmaciones,
-            acompañantes, restricciones alimentarias y notas.
+            Este aviso aplica a las personas que crean una cuenta, colaboran en un evento o acceden mediante un código.
+            Respecto de la información de invitados, la persona que crea u organiza el evento determina qué datos
+            incorpora y con qué finalidad. Esa persona debe contar con una base legítima para tratarlos, informar a sus
+            invitados y obtener el consentimiento que resulte necesario. Treenvite procesa esa información para prestar
+            el servicio conforme a las instrucciones del organizador.
+          </p>
+          <h2>3. Datos personales tratados</h2>
+          <p>
+            Para cuentas y colaboradores podemos tratar nombre, correo electrónico, fotografía o avatar, estado de
+            verificación del correo e identificador de la identidad utilizada para iniciar sesión. Para operar los
+            eventos tratamos nombre, tipo, fecha, ubicación y estado del evento, así como la información que los
+            usuarios incorporen sobre sus invitados: nombre, correo, teléfono, grupo, relación, estado de confirmación,
+            número de acompañantes, restricciones alimentarias y notas.
           </p>
           <p>
-            Para proteger las sesiones podemos procesar datos técnicos como dirección IP, navegador o agente de usuario,
-            fechas de acceso y tokens de sesión almacenados de forma segura. No registramos datos personales de
-            invitados en logs de aplicación como parte de la operación normal.
+            Las restricciones alimentarias y el contenido libre de las notas podrían revelar información de salud u
+            otros datos personales sensibles. Deben registrarse únicamente cuando sean necesarios para la organización
+            del evento y se cuente con el consentimiento expreso que corresponda. Treenvite no solicita datos
+            financieros, patrimoniales ni documentos oficiales de identidad.
           </p>
-          <h2>3. Finalidades</h2>
           <p>
-            Usamos la información para crear y administrar cuentas y eventos, mostrar la lista y el árbol de invitados,
-            permitir la colaboración, enviar invitaciones y correos de seguridad, generar exportaciones solicitadas,
-            prevenir abusos, mantener la seguridad, atender solicitudes y cumplir obligaciones legales.
+            Para proteger las sesiones también podemos tratar dirección IP, navegador o agente de usuario, fechas de
+            acceso, identificadores de sesión y registros técnicos de seguridad. No incluimos datos personales de
+            invitados en los logs de aplicación durante la operación normal.
           </p>
-          <h2>4. Compartición</h2>
+          <h2>4. Finalidades del tratamiento</h2>
           <p>
-            La información de un evento puede ser visible para las personas a quienes su propietario conceda acceso o a
-            quienes compartan un código vigente. Podemos apoyarnos en proveedores de infraestructura, correo y
-            autenticación para operar Treenvite; sólo deben recibir la información necesaria para su función. No
-            vendemos la información personal.
+            Las finalidades necesarias son: crear, autenticar y administrar cuentas; verificar correos; recuperar el
+            acceso; crear y administrar eventos; mostrar listas y árboles de invitados; buscar, ordenar y exportar
+            datos; gestionar colaboradores, invitaciones y códigos temporales; enviar mensajes transaccionales y de
+            seguridad; mantener sesiones; prevenir fraude, abuso y accesos no autorizados; atender solicitudes; resolver
+            errores y cumplir obligaciones legales.
           </p>
-          <h2>5. Cookies y tecnologías similares</h2>
           <p>
-            Utilizamos cookies técnicas HttpOnly para mantener la sesión y medidas de seguridad asociadas. Son
-            necesarias para iniciar sesión y proteger las solicitudes; no se utilizan para publicidad personalizada.
+            No tratamos datos para mercadotecnia, publicidad, prospección comercial ni analítica de terceros. Tampoco
+            vendemos datos personales. Si en el futuro se incorpora una finalidad secundaria, este aviso se actualizará
+            y se solicitará el consentimiento cuando sea obligatorio.
           </p>
-          <h2>6. Conservación y eliminación</h2>
+          <h2>5. Inicio de sesión con Google</h2>
           <p>
-            Conservamos la información mientras exista la cuenta o sea necesaria para las finalidades descritas. Desde
-            la sección de cuenta puedes solicitar el borrado de tu cuenta y de la información relacionada. El borrado
-            elimina permanentemente tus sesiones, identidades, eventos propios, invitados, membresías, invitaciones y
-            accesos asociados, salvo la información que debamos conservar por una obligación legal.
+            El acceso con Google es opcional. Cuando lo eliges, Treenvite recibe de Google un identificador de cuenta,
+            tu nombre, correo electrónico verificado y, si está disponible, tu fotografía de perfil. Utilizamos esos
+            datos exclusivamente para crear o vincular tu cuenta, comprobar tu identidad e iniciar tu sesión. No
+            solicitamos acceso a Google Drive, Google Calendar, Contactos, Gmail ni a otros contenidos de tu cuenta de
+            Google.
           </p>
-          <h2>7. Tus derechos</h2>
+          <h2>6. Acceso, proveedores y transferencias</h2>
           <p>
-            Puedes solicitar acceso, corrección, actualización, oposición, limitación o eliminación de tus datos, según
-            resulte aplicable en tu jurisdicción. Para ejercerlos, utiliza el correo de privacidad que se publicará en
-            la versión definitiva de este aviso. Podemos pedir información razonable para verificar tu identidad.
+            La información de un evento será visible para su propietario, los colaboradores invitados y las personas a
+            quienes se conceda acceso mediante un código vigente, de acuerdo con los permisos definidos por el
+            propietario. Al invitar o compartir un código, el propietario instruye ese acceso y es responsable de
+            concederlo únicamente a personas autorizadas.
           </p>
-          <h2>8. Seguridad y menores</h2>
           <p>
-            Aplicamos controles técnicos y organizativos razonables, aunque ningún sistema conectado a internet es
-            absolutamente invulnerable. Treenvite no está dirigido a menores que no puedan consentir el tratamiento de
-            sus datos conforme a la normativa aplicable.
+            Para operar Treenvite se utilizan proveedores de infraestructura y almacenamiento, correo transaccional y
+            autenticación de Google. Esos proveedores sólo pueden tratar la información necesaria para prestar sus
+            servicios y actúan conforme a sus obligaciones contractuales y de seguridad. No transferimos datos a
+            terceros para finalidades propias que requieran consentimiento.
           </p>
-          <h2>9. Cambios</h2>
+          <h2>7. Cookies y tecnologías automáticas</h2>
           <p>
-            Publicaremos en esta página la versión vigente y su fecha de actualización. Si un cambio es material,
-            comunicaremos la actualización por los medios disponibles cuando corresponda.
+            Utilizamos cookies técnicas HttpOnly para mantener la sesión y mecanismos asociados para proteger las
+            solicitudes. También podemos obtener automáticamente la dirección IP y datos del navegador necesarios para
+            seguridad y diagnóstico. Estas tecnologías no se utilizan para publicidad, seguimiento comercial ni
+            analítica de terceros.
+          </p>
+          <h2>8. Conservación y eliminación</h2>
+          <p>
+            Conservamos la información mientras exista la cuenta o sea necesaria para las finalidades descritas. Los
+            códigos, invitaciones y sesiones cuentan con sus propios periodos de vigencia. Al borrar una cuenta desde la
+            sección de cuenta se eliminan permanentemente sus sesiones, identidades, eventos propios, invitados,
+            membresías, invitaciones y accesos asociados, salvo los datos que debamos bloquear o conservar durante el
+            plazo exigido por una obligación legal o para atender responsabilidades derivadas del tratamiento.
+          </p>
+          <h2>9. Derechos ARCO, limitación y revocación</h2>
+          <p>
+            Puedes solicitar el acceso, rectificación, cancelación u oposición respecto de tus datos personales; limitar
+            su uso o divulgación, o revocar tu consentimiento, escribiendo a
+            <a class="link link-primary" href="mailto:enrique159624873@gmail.com">enrique159624873@gmail.com</a>. La
+            solicitud debe indicar tu nombre, un medio para recibir respuesta, los datos involucrados, el derecho que
+            deseas ejercer y una descripción clara de tu petición. Podremos solicitar la información estrictamente
+            necesaria para comprobar tu identidad o representación.
+          </p>
+          <p>
+            Comunicaremos la determinación dentro de los veinte días siguientes a la recepción de una solicitud
+            completa. Si resulta procedente, la haremos efectiva dentro de los quince días siguientes. Estos plazos
+            podrán ampliarse una sola vez por un periodo igual cuando las circunstancias lo justifiquen. El ejercicio de
+            los derechos ARCO es gratuito, salvo los costos permitidos de reproducción o envío.
+          </p>
+          <h2>10. Seguridad e incidentes</h2>
+          <p>
+            Aplicamos medidas administrativas y técnicas razonables para proteger la información contra daño, pérdida,
+            alteración, destrucción, acceso o tratamiento no autorizado. Ningún sistema conectado a internet es
+            absolutamente invulnerable. Si ocurre una vulneración que afecte significativamente tus derechos
+            patrimoniales o morales, te informaremos sin demora por los medios de contacto disponibles.
+          </p>
+          <h2>11. Menores de edad</h2>
+          <p>
+            Treenvite no está dirigido a menores que no puedan consentir por sí mismos el tratamiento de sus datos.
+            Quien organice un evento y registre información de una persona menor debe contar con la autorización de
+            quien ejerza su patria potestad o tutela cuando resulte exigible.
+          </p>
+          <h2>12. Cambios al aviso</h2>
+          <p>
+            Publicaremos cualquier modificación en esta misma página, indicando la fecha de actualización. Cuando un
+            cambio sea material y contemos con un medio de contacto, también podremos comunicarlo por correo electrónico
+            o mediante un aviso dentro de Treenvite. Si el cambio requiere un nuevo consentimiento, lo solicitaremos
+            antes de aplicar el tratamiento correspondiente.
           </p>
         </div>
       </article>
