@@ -17,7 +17,8 @@ describe('CsrfGuard', () => {
         getRequest: () => ({
           method: 'POST',
           user: { id: 'user-1', sessionId: 'session-1' },
-          header: (name: string) => (name === 'x-csrf-token' ? token : undefined),
+          header: (name: string) =>
+            name === 'x-csrf-token' ? token : undefined,
         }),
       }),
     }) as ExecutionContext;
@@ -29,14 +30,18 @@ describe('CsrfGuard', () => {
     const guard = new CsrfGuard(repository as never);
 
     await expect(guard.canActivate(context('valid-token'))).resolves.toBe(true);
-    expect(queryBuilder.where).toHaveBeenCalledWith('session.id = :id', { id: 'session-1' });
+    expect(queryBuilder.where).toHaveBeenCalledWith('session.id = :id', {
+      id: 'session-1',
+    });
   });
 
   it('rejects a missing or mismatched token', async () => {
     getOne.mockResolvedValue({ csrfHash: sha256('valid-token') });
     const guard = new CsrfGuard(repository as never);
 
-    await expect(guard.canActivate(context('wrong-token'))).rejects.toMatchObject({
+    await expect(
+      guard.canActivate(context('wrong-token')),
+    ).rejects.toMatchObject({
       response: expect.objectContaining({ code: 'INVALID_CSRF_TOKEN' }),
     });
   });

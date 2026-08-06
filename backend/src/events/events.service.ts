@@ -5,7 +5,11 @@ import { EventAccessGrant } from '../access-codes/entities/event-access-grant.en
 import { ApiException } from '../common/api-exception';
 import { EventRole, EventStatus } from '../common/domain.enums';
 import { EventMember } from '../members/entities/event-member.entity';
-import { CreateEventDto, EventListQueryDto, UpdateEventDto } from './dto/event.dto';
+import {
+  CreateEventDto,
+  EventListQueryDto,
+  UpdateEventDto,
+} from './dto/event.dto';
 import { Event } from './entities/event.entity';
 import { EventAccessService } from './event-access.service';
 
@@ -13,13 +17,18 @@ import { EventAccessService } from './event-access.service';
 export class EventsService {
   constructor(
     @InjectRepository(Event) private readonly events: Repository<Event>,
-    @InjectRepository(EventMember) private readonly members: Repository<EventMember>,
-    @InjectRepository(EventAccessGrant) private readonly grants: Repository<EventAccessGrant>,
+    @InjectRepository(EventMember)
+    private readonly members: Repository<EventMember>,
+    @InjectRepository(EventAccessGrant)
+    private readonly grants: Repository<EventAccessGrant>,
     private readonly access: EventAccessService,
   ) {}
 
   async list(userId: string, query: EventListQueryDto) {
-    const memberships = await this.members.find({ where: { userId }, select: { eventId: true } });
+    const memberships = await this.members.find({
+      where: { userId },
+      select: { eventId: true },
+    });
     const grants = await this.grants
       .createQueryBuilder('grant')
       .innerJoin('grant.accessCode', 'accessCode')
@@ -29,8 +38,15 @@ export class EventsService {
       .andWhere('accessCode.expiresAt > :now', { now: new Date() })
       .andWhere('accessCode.revokedAt IS NULL')
       .getRawMany<{ eventId: string }>();
-    const accessible = [...new Set([...memberships.map((item) => item.eventId), ...grants.map((item) => item.eventId)])];
-    const where = accessible.length ? [{ ownerId: userId }, { id: In(accessible) }] : [{ ownerId: userId }];
+    const accessible = [
+      ...new Set([
+        ...memberships.map((item) => item.eventId),
+        ...grants.map((item) => item.eventId),
+      ]),
+    ];
+    const where = accessible.length
+      ? [{ ownerId: userId }, { id: In(accessible) }]
+      : [{ ownerId: userId }];
     const [items, total] = await this.events.findAndCount({
       where,
       order: { startsAt: 'ASC' },
@@ -60,12 +76,25 @@ export class EventsService {
     return Object.assign(event!, { role });
   }
 
-  async update(userId: string, id: string, dto: UpdateEventDto): Promise<Event> {
+  async update(
+    userId: string,
+    id: string,
+    dto: UpdateEventDto,
+  ): Promise<Event> {
     await this.access.requireRole(id, userId, EventRole.EDITOR);
     const event = await this.events.findOne({ where: { id } });
-    if (!event) throw new ApiException(HttpStatus.NOT_FOUND, 'EVENT_NOT_FOUND', 'El evento no existe');
+    if (!event)
+      throw new ApiException(
+        HttpStatus.NOT_FOUND,
+        'EVENT_NOT_FOUND',
+        'El evento no existe',
+      );
     if (dto.version && dto.version !== event.version) {
-      throw new ApiException(HttpStatus.CONFLICT, 'EVENT_VERSION_CONFLICT', 'El evento cambió desde que lo abriste');
+      throw new ApiException(
+        HttpStatus.CONFLICT,
+        'EVENT_VERSION_CONFLICT',
+        'El evento cambió desde que lo abriste',
+      );
     }
     if (dto.name !== undefined) event.name = dto.name.trim();
     if (dto.type !== undefined) event.type = dto.type.trim();

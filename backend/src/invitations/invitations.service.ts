@@ -15,8 +15,10 @@ import { EventInvitation } from './entities/event-invitation.entity';
 @Injectable()
 export class InvitationsService {
   constructor(
-    @InjectRepository(EventInvitation) private readonly invitations: Repository<EventInvitation>,
-    @InjectRepository(EventMember) private readonly members: Repository<EventMember>,
+    @InjectRepository(EventInvitation)
+    private readonly invitations: Repository<EventInvitation>,
+    @InjectRepository(EventMember)
+    private readonly members: Repository<EventMember>,
     @InjectRepository(Event) private readonly events: Repository<Event>,
     @InjectRepository(User) private readonly users: Repository<User>,
     private readonly access: EventAccessService,
@@ -25,7 +27,10 @@ export class InvitationsService {
 
   async list(actorId: string, eventId: string) {
     await this.access.requireRole(eventId, actorId, EventRole.OWNER);
-    return this.invitations.find({ where: { eventId }, order: { createdAt: 'DESC' } });
+    return this.invitations.find({
+      where: { eventId },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async create(actorId: string, eventId: string, dto: CreateInvitationDto) {
@@ -51,21 +56,39 @@ export class InvitationsService {
 
   async preview(raw: string) {
     const invitation = await this.findActive(raw);
-    const event = await this.events.findOne({ where: { id: invitation.eventId }, select: { id: true, name: true } });
+    const event = await this.events.findOne({
+      where: { id: invitation.eventId },
+      select: { id: true, name: true },
+    });
     const [name, domain] = invitation.email.split('@');
-    return { event, email: `${name.slice(0, 2)}***@${domain}`, role: invitation.role, expiresAt: invitation.expiresAt };
+    return {
+      event,
+      email: `${name.slice(0, 2)}***@${domain}`,
+      role: invitation.role,
+      expiresAt: invitation.expiresAt,
+    };
   }
 
   async accept(userId: string, dto: AcceptInvitationDto) {
     const invitation = await this.findActive(dto.token);
     const user = await this.users.findOne({ where: { id: userId } });
     if (!user || user.email !== invitation.email) {
-      throw new ApiException(HttpStatus.FORBIDDEN, 'INVITATION_EMAIL_MISMATCH', 'La invitación pertenece a otro correo');
+      throw new ApiException(
+        HttpStatus.FORBIDDEN,
+        'INVITATION_EMAIL_MISMATCH',
+        'La invitación pertenece a otro correo',
+      );
     }
-    let member = await this.members.findOne({ where: { eventId: invitation.eventId, userId } });
+    let member = await this.members.findOne({
+      where: { eventId: invitation.eventId, userId },
+    });
     if (!member) {
       member = await this.members.save(
-        this.members.create({ eventId: invitation.eventId, userId, role: invitation.role }),
+        this.members.create({
+          eventId: invitation.eventId,
+          userId,
+          role: invitation.role,
+        }),
       );
     }
     invitation.status = InvitationStatus.ACCEPTED;
@@ -76,8 +99,15 @@ export class InvitationsService {
 
   async revoke(actorId: string, eventId: string, invitationId: string) {
     await this.access.requireRole(eventId, actorId, EventRole.OWNER);
-    const invitation = await this.invitations.findOne({ where: { id: invitationId, eventId } });
-    if (!invitation) throw new ApiException(HttpStatus.NOT_FOUND, 'INVITATION_NOT_FOUND', 'La invitación no existe');
+    const invitation = await this.invitations.findOne({
+      where: { id: invitationId, eventId },
+    });
+    if (!invitation)
+      throw new ApiException(
+        HttpStatus.NOT_FOUND,
+        'INVITATION_NOT_FOUND',
+        'La invitación no existe',
+      );
     invitation.status = InvitationStatus.REVOKED;
     await this.invitations.save(invitation);
     return { message: 'Invitación revocada' };
@@ -91,7 +121,12 @@ export class InvitationsService {
         expiresAt: MoreThan(new Date()),
       },
     });
-    if (!invitation) throw new ApiException(HttpStatus.BAD_REQUEST, 'INVITATION_INVALID', 'La invitación no existe o expiró');
+    if (!invitation)
+      throw new ApiException(
+        HttpStatus.BAD_REQUEST,
+        'INVITATION_INVALID',
+        'La invitación no existe o expiró',
+      );
     return invitation;
   }
 }

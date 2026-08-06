@@ -1,4 +1,12 @@
-import { Column, CreateDateColumn, Entity, Index, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { EventRole } from '../../common/domain.enums';
 import { Event } from '../../events/entities/event.entity';
 import { EventAccessGrant } from './event-access-grant.entity';

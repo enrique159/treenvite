@@ -33,7 +33,9 @@ describe('GuestsService', () => {
     repository.findOne.mockResolvedValue({ id: 'guest-1', eventId: 'event-1' });
     repository.find.mockResolvedValue([{ id: 'child-1', name: 'Hija' }]);
 
-    await expect(service.remove('user-1', 'event-1', 'guest-1')).rejects.toMatchObject({
+    await expect(
+      service.remove('user-1', 'event-1', 'guest-1'),
+    ).rejects.toMatchObject({
       status: HttpStatus.CONFLICT,
     } as Partial<ApiException>);
     expect(repository.remove).not.toHaveBeenCalled();
@@ -44,27 +46,53 @@ describe('GuestsService', () => {
     repository.findOne.mockResolvedValue(guest);
     repository.find.mockResolvedValue([]);
 
-    await expect(service.remove('user-1', 'event-1', 'guest-1')).resolves.toEqual({ message: 'Invitado eliminado' });
+    await expect(
+      service.remove('user-1', 'event-1', 'guest-1'),
+    ).resolves.toEqual({ message: 'Invitado eliminado' });
     expect(repository.remove).toHaveBeenCalledWith(guest);
   });
 
   it('rejects a parent that belongs to another event', async () => {
     repository.findOne
-      .mockResolvedValueOnce({ id: 'guest-1', eventId: 'event-1', parentId: null, version: 1 })
+      .mockResolvedValueOnce({
+        id: 'guest-1',
+        eventId: 'event-1',
+        parentId: null,
+        version: 1,
+      })
       .mockResolvedValueOnce(null);
 
-    await expect(service.update('user-1', 'event-1', 'guest-1', { parentId: 'outside-parent' })).rejects.toMatchObject({
+    await expect(
+      service.update('user-1', 'event-1', 'guest-1', {
+        parentId: 'outside-parent',
+      }),
+    ).rejects.toMatchObject({
       response: expect.objectContaining({ code: 'PARENT_NOT_IN_EVENT' }),
     });
   });
 
   it('rejects reparenting below one of its descendants', async () => {
     repository.findOne
-      .mockResolvedValueOnce({ id: 'guest-1', eventId: 'event-1', parentId: null, version: 1 })
-      .mockResolvedValueOnce({ id: 'child-1', eventId: 'event-1', parentId: 'guest-1' })
-      .mockResolvedValueOnce({ id: 'guest-1', eventId: 'event-1', parentId: null });
+      .mockResolvedValueOnce({
+        id: 'guest-1',
+        eventId: 'event-1',
+        parentId: null,
+        version: 1,
+      })
+      .mockResolvedValueOnce({
+        id: 'child-1',
+        eventId: 'event-1',
+        parentId: 'guest-1',
+      })
+      .mockResolvedValueOnce({
+        id: 'guest-1',
+        eventId: 'event-1',
+        parentId: null,
+      });
 
-    await expect(service.update('user-1', 'event-1', 'guest-1', { parentId: 'child-1' })).rejects.toMatchObject({
+    await expect(
+      service.update('user-1', 'event-1', 'guest-1', { parentId: 'child-1' }),
+    ).rejects.toMatchObject({
       response: expect.objectContaining({ code: 'GUEST_TREE_CYCLE' }),
     });
   });

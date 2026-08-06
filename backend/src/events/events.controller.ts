@@ -1,10 +1,24 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CsrfGuard } from '../auth/csrf.guard';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CurrentUser } from '../common/current-user.decorator';
 import type { AuthenticatedUser } from '../common/current-user.decorator';
-import { CreateEventDto, EventListQueryDto, UpdateEventDto } from './dto/event.dto';
+import {
+  CreateEventDto,
+  EventListQueryDto,
+  UpdateEventDto,
+} from './dto/event.dto';
 import { EventsService } from './events.service';
 
 @ApiTags('events')
@@ -14,7 +28,10 @@ export class EventsController {
   constructor(private readonly events: EventsService) {}
 
   @Get()
-  list(@CurrentUser() user: AuthenticatedUser, @Query() query: EventListQueryDto) {
+  list(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: EventListQueryDto,
+  ) {
     return this.events.list(user.id, query);
   }
 
@@ -31,7 +48,11 @@ export class EventsController {
 
   @Patch(':id')
   @UseGuards(CsrfGuard)
-  update(@CurrentUser() user: AuthenticatedUser, @Param('id') id: string, @Body() dto: UpdateEventDto) {
+  update(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id') id: string,
+    @Body() dto: UpdateEventDto,
+  ) {
     return this.events.update(user.id, id, dto);
   }
 

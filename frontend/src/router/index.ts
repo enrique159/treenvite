@@ -12,8 +12,16 @@ const router = createRouter({
       children: [
         { path: 'login', name: 'login', component: () => import('../views/auth/LoginView.vue') },
         { path: 'register', name: 'register', component: () => import('../views/auth/RegisterView.vue') },
-        { path: 'forgot-password', name: 'forgot-password', component: () => import('../views/auth/ForgotPasswordView.vue') },
-        { path: 'reset-password', name: 'reset-password', component: () => import('../views/auth/ResetPasswordView.vue') },
+        {
+          path: 'forgot-password',
+          name: 'forgot-password',
+          component: () => import('../views/auth/ForgotPasswordView.vue'),
+        },
+        {
+          path: 'reset-password',
+          name: 'reset-password',
+          component: () => import('../views/auth/ResetPasswordView.vue'),
+        },
         { path: 'verify', name: 'verify-email', component: () => import('../views/auth/VerifyEmailView.vue') },
       ],
     },
@@ -27,9 +35,21 @@ const router = createRouter({
         { path: 'events', name: 'events', component: () => import('../views/events/EventsView.vue') },
         { path: 'events/new', name: 'event-new', component: () => import('../views/events/EventFormView.vue') },
         { path: 'events/:eventId', redirect: (route) => `/events/${String(route.params.eventId)}/guests` },
-        { path: 'events/:eventId/guests', name: 'event-guests', component: () => import('../views/events/EventGuestsView.vue') },
-        { path: 'events/:eventId/tree', name: 'event-tree', component: () => import('../views/events/EventTreeView.vue') },
-        { path: 'events/:eventId/settings', name: 'event-settings', component: () => import('../views/events/EventSettingsView.vue') },
+        {
+          path: 'events/:eventId/guests',
+          name: 'event-guests',
+          component: () => import('../views/events/EventGuestsView.vue'),
+        },
+        {
+          path: 'events/:eventId/tree',
+          name: 'event-tree',
+          component: () => import('../views/events/EventTreeView.vue'),
+        },
+        {
+          path: 'events/:eventId/settings',
+          name: 'event-settings',
+          component: () => import('../views/events/EventSettingsView.vue'),
+        },
         { path: 'join', name: 'join', component: () => import('../views/JoinEventView.vue') },
       ],
     },

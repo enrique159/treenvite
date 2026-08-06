@@ -1,4 +1,12 @@
-import { Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('refresh_sessions')
@@ -10,13 +18,13 @@ export class RefreshSession {
   @Column({ length: 64, select: false })
   tokenHash: string;
 
-  @Column({ length: 64, nullable: true, select: false })
+  @Column({ type: 'varchar', length: 64, nullable: true, select: false })
   csrfHash: string | null;
 
-  @Column({ length: 500, nullable: true })
+  @Column({ type: 'varchar', length: 500, nullable: true })
   userAgent: string | null;
 
-  @Column({ length: 64, nullable: true })
+  @Column({ type: 'varchar', length: 64, nullable: true })
   ipAddress: string | null;
 
   @Column({ type: 'datetime', precision: 6 })

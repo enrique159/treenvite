@@ -13,9 +13,13 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, AuthIdentity, AuthToken, RefreshSession]), PassportModule, JwtModule.register({})],
+  imports: [
+    TypeOrmModule.forFeature([User, AuthIdentity, AuthToken, RefreshSession]),
+    PassportModule,
+    JwtModule.register({}),
+  ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtAuthGuard, CsrfGuard],
-  exports: [JwtAuthGuard, CsrfGuard],
+  exports: [JwtAuthGuard, CsrfGuard, TypeOrmModule],
 })
 export class AuthModule {}

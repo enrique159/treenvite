@@ -44,7 +44,10 @@ export const useGuestsStore = defineStore('guests', () => {
   }
 
   async function create(eventId: string, payload: GuestPayload): Promise<Guest> {
-    const guest = await apiRequest<Guest>(`/events/${eventId}/guests`, { method: 'POST', body: JSON.stringify(payload) })
+    const guest = await apiRequest<Guest>(`/events/${eventId}/guests`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
     items.value.push(guest)
     total.value += 1
     return guest

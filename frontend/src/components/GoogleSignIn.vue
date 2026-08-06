@@ -22,8 +22,16 @@ onMounted(() => {
   if (!clientId || !container.value) return
   const render = () => {
     if (!window.google || !container.value) return
-    window.google.accounts.id.initialize({ client_id: clientId, callback: (response) => emit('credential', response.credential) })
-    window.google.accounts.id.renderButton(container.value, { theme: 'outline', size: 'large', width: 420, text: 'continue_with' })
+    window.google.accounts.id.initialize({
+      client_id: clientId,
+      callback: (response) => emit('credential', response.credential),
+    })
+    window.google.accounts.id.renderButton(container.value, {
+      theme: 'outline',
+      size: 'large',
+      width: 420,
+      text: 'continue_with',
+    })
   }
   if (window.google) render()
   else {

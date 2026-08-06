@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { AuthProvider } from '../../common/domain.enums';
 import { User } from '../../users/entities/user.entity';
 
@@ -14,7 +21,7 @@ export class AuthIdentity {
   @Column({ length: 191 })
   providerSubject: string;
 
-  @Column({ length: 255, nullable: true, select: false })
+  @Column({ type: 'varchar', length: 255, nullable: true, select: false })
   passwordHash: string | null;
 
   @Column()

@@ -4,8 +4,73 @@ import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiError } from '../../services/api'
 import { useEventsStore } from '../../stores/events'
-const router = useRouter(); const events = useEventsStore(); const loading = ref(false); const error = ref('')
+const router = useRouter()
+const events = useEventsStore()
+const loading = ref(false)
+const error = ref('')
 const form = reactive({ name: '', type: 'Boda', startsAt: '', location: '', color: '#e96f51' })
-async function submit() { loading.value = true; error.value = ''; try { const event = await events.create({ ...form, startsAt: new Date(`${form.startsAt}T12:00:00`).toISOString() }); await router.push(`/events/${event.id}/guests`) } catch (cause) { error.value = cause instanceof ApiError ? cause.message : 'No pudimos crear el evento' } finally { loading.value = false } }
+async function submit() {
+  loading.value = true
+  error.value = ''
+  try {
+    const event = await events.create({ ...form, startsAt: new Date(`${form.startsAt}T12:00:00`).toISOString() })
+    await router.push(`/events/${event.id}/guests`)
+  } catch (cause) {
+    error.value = cause instanceof ApiError ? cause.message : 'No pudimos crear el evento'
+  } finally {
+    loading.value = false
+  }
+}
 </script>
-<template><div><header class="border-b border-base-300 bg-base-100 px-6 py-6"><div class="mx-auto flex max-w-4xl items-center gap-3"><RouterLink to="/events" class="btn btn-circle btn-ghost"><ArrowLeft class="size-5" /></RouterLink><div><p class="text-[10px] font-bold uppercase tracking-widest opacity-45">Un nuevo comienzo</p><h1 class="font-display text-3xl">Crea tu evento</h1></div></div></header><div class="mx-auto max-w-3xl p-6 sm:p-10"><div v-if="error" class="alert alert-error mb-5">{{ error }}</div><form class="card border border-base-300 bg-base-100 shadow-sm" @submit.prevent="submit"><div class="card-body grid gap-5 sm:grid-cols-2"><label class="form-control sm:col-span-2"><span class="label-text mb-1 text-xs">Nombre</span><input v-model="form.name" class="input input-bordered" required placeholder="Boda de Ana & Carlos" /></label><label class="form-control"><span class="label-text mb-1 text-xs">Tipo</span><select v-model="form.type" class="select select-bordered"><option>Boda</option><option>Cumpleaños</option><option>Cena</option><option>Corporativo</option><option>Otro</option></select></label><label class="form-control"><span class="label-text mb-1 text-xs">Fecha</span><input v-model="form.startsAt" class="input input-bordered" type="date" required /></label><label class="form-control sm:col-span-2"><span class="label-text mb-1 text-xs">Ubicación</span><input v-model="form.location" class="input input-bordered" required /></label><label class="form-control"><span class="label-text mb-1 text-xs">Color</span><input v-model="form.color" class="input input-bordered h-12" type="color" /></label><div class="card-actions items-end justify-end sm:col-span-2"><RouterLink to="/events" class="btn btn-ghost">Cancelar</RouterLink><button class="btn btn-primary" :disabled="loading"><span v-if="loading" class="loading loading-spinner loading-xs"></span>Crear evento</button></div></div></form></div></div></template>
+<template>
+  <div>
+    <header class="border-b border-base-300 bg-base-100 px-6 py-6">
+      <div class="mx-auto flex max-w-4xl items-center gap-3">
+        <RouterLink to="/events" class="btn btn-circle btn-ghost"><ArrowLeft class="size-5" /></RouterLink>
+        <div>
+          <p class="text-[10px] font-bold uppercase tracking-widest opacity-45">Un nuevo comienzo</p>
+          <h1 class="font-display text-3xl">Crea tu evento</h1>
+        </div>
+      </div>
+    </header>
+    <div class="mx-auto max-w-3xl p-6 sm:p-10">
+      <div v-if="error" class="alert alert-error mb-5">{{ error }}</div>
+      <form class="card border border-base-300 bg-base-100 shadow-sm" @submit.prevent="submit">
+        <div class="card-body grid gap-5 sm:grid-cols-2">
+          <label class="form-control sm:col-span-2"
+            ><span class="label-text mb-1 text-xs">Nombre</span
+            ><input
+              v-model="form.name"
+              class="input input-bordered"
+              required
+              placeholder="Boda de Ana & Carlos" /></label
+          ><label class="form-control"
+            ><span class="label-text mb-1 text-xs">Tipo</span
+            ><select v-model="form.type" class="select select-bordered">
+              <option>Boda</option>
+              <option>Cumpleaños</option>
+              <option>Cena</option>
+              <option>Corporativo</option>
+              <option>Otro</option>
+            </select></label
+          ><label class="form-control"
+            ><span class="label-text mb-1 text-xs">Fecha</span
+            ><input v-model="form.startsAt" class="input input-bordered" type="date" required /></label
+          ><label class="form-control sm:col-span-2"
+            ><span class="label-text mb-1 text-xs">Ubicación</span
+            ><input v-model="form.location" class="input input-bordered" required /></label
+          ><label class="form-control"
+            ><span class="label-text mb-1 text-xs">Color</span
+            ><input v-model="form.color" class="input input-bordered h-12" type="color"
+          /></label>
+          <div class="card-actions items-end justify-end sm:col-span-2">
+            <RouterLink to="/events" class="btn btn-ghost">Cancelar</RouterLink
+            ><button class="btn btn-primary" :disabled="loading">
+              <span v-if="loading" class="loading loading-spinner loading-xs"></span>Crear evento
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>

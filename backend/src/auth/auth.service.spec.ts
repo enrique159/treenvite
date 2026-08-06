@@ -18,12 +18,16 @@ describe('AuthService refresh sessions', () => {
     const sessions = {
       createQueryBuilder: jest.fn(() => queryBuilder),
       create: jest.fn((value) => value),
-      save: jest.fn(async (value) => ('id' in value ? value : { ...value, id: 'new-session' })),
+      save: jest.fn(async (value) =>
+        'id' in value ? value : { ...value, id: 'new-session' },
+      ),
     };
     const jwt = { signAsync: jest.fn().mockResolvedValue('new-access-token') };
     const config = {
       get: jest.fn().mockReturnValue('google-client-id'),
-      getOrThrow: jest.fn().mockReturnValue('a-long-jwt-secret-used-only-in-tests'),
+      getOrThrow: jest
+        .fn()
+        .mockReturnValue('a-long-jwt-secret-used-only-in-tests'),
     };
     const service = new AuthService(
       {} as never,
@@ -40,9 +44,15 @@ describe('AuthService refresh sessions', () => {
     expect(oldSession.revokedAt).toBeInstanceOf(Date);
     expect(result.refreshToken).not.toBe('old-refresh-token');
     expect(sessions.create).toHaveBeenCalledWith(
-      expect.objectContaining({ tokenHash: expect.any(String), userId: 'user-1', revokedAt: null }),
+      expect.objectContaining({
+        tokenHash: expect.any(String),
+        userId: 'user-1',
+        revokedAt: null,
+      }),
     );
-    expect(sessions.create.mock.calls[0]?.[0].tokenHash).not.toBe(result.refreshToken);
+    expect(sessions.create.mock.calls[0]?.[0].tokenHash).not.toBe(
+      result.refreshToken,
+    );
     expect(result.accessToken).toBe('new-access-token');
   });
 });

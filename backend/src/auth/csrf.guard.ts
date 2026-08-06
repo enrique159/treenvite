@@ -1,4 +1,9 @@
-import { CanActivate, ExecutionContext, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Request } from 'express';
 import { Repository } from 'typeorm';
@@ -15,7 +20,9 @@ export class CsrfGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request & { user: AuthenticatedUser }>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user: AuthenticatedUser }>();
     if (['GET', 'HEAD', 'OPTIONS'].includes(request.method)) return true;
 
     const token = request.header('x-csrf-token');
@@ -27,7 +34,11 @@ export class CsrfGuard implements CanActivate {
       .getOne();
 
     if (!token || !session?.csrfHash || sha256(token) !== session.csrfHash) {
-      throw new ApiException(HttpStatus.FORBIDDEN, 'INVALID_CSRF_TOKEN', 'La sesión de seguridad expiró');
+      throw new ApiException(
+        HttpStatus.FORBIDDEN,
+        'INVALID_CSRF_TOKEN',
+        'La sesión de seguridad expiró',
+      );
     }
     return true;
   }

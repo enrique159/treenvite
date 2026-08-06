@@ -12,7 +12,11 @@ describe('InvitationsService', () => {
         status: InvitationStatus.PENDING,
       }),
     };
-    const users = { findOne: jest.fn().mockResolvedValue({ id: 'user-1', email: 'otra@example.com' }) };
+    const users = {
+      findOne: jest
+        .fn()
+        .mockResolvedValue({ id: 'user-1', email: 'otra@example.com' }),
+    };
     const service = new InvitationsService(
       invitations as never,
       {} as never,
@@ -22,7 +26,9 @@ describe('InvitationsService', () => {
       {} as never,
     );
 
-    await expect(service.accept('user-1', { token: 'invitation-token' })).rejects.toMatchObject({
+    await expect(
+      service.accept('user-1', { token: 'invitation-token' }),
+    ).rejects.toMatchObject({
       response: expect.objectContaining({ code: 'INVITATION_EMAIL_MISMATCH' }),
     });
   });

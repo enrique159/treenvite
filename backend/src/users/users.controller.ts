@@ -13,7 +13,10 @@ export class UsersController {
 
   @Patch('me')
   @UseGuards(CsrfGuard)
-  update(@CurrentUser() user: AuthenticatedUser, @Body() dto: UpdateProfileDto) {
+  update(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: UpdateProfileDto,
+  ) {
     return this.users.update(user.id, dto);
   }
 }

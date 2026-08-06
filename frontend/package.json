@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
+    "format": "prettier --write \"src/**/*.{ts,vue,css}\" \"*.{ts,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,vue,css}\" \"*.{ts,json}\"",
+    "lint": "eslint . --fix",
+    "lint:check": "eslint .",
     "preview": "vite preview",
     "test": "vitest run"
   },
@@ -17,20 +21,29 @@
     "vue-router": "4.6.4"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "^24.13.3",
     "@types/sortablejs": "1.15.9",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/compiler-dom": "3.5.41",
     "@vue/devtools-api": "8.1.5",
+    "@vue/eslint-config-typescript": "^14.9.0",
     "@vue/test-utils": "2.4.11",
     "@vue/tsconfig": "^0.9.1",
     "daisyui": "5.7.16",
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "eslint-plugin-vue": "^10.10.0",
+    "globals": "^17.9.0",
     "jsdom": "26.1.0",
+    "prettier": "^3.9.6",
     "tailwindcss": "4.3.3",
     "typescript": "~6.0.2",
     "vite": "8.2.1",
     "vitest": "4.1.10",
+    "vue-eslint-parser": "^10.4.1",
     "vue-tsc": "^3.3.8"
   }
 }

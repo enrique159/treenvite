@@ -1,6 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { apiRequest, setCsrfToken } from './api'
 
+const apiUrl = import.meta.env.VITE_API_URL || '/api/v1'
+
 describe('apiRequest', () => {
   afterEach(() => vi.unstubAllGlobals())
 
@@ -10,7 +12,7 @@ describe('apiRequest', () => {
 
     await apiRequest('/events')
 
-    expect(fetchMock).toHaveBeenCalledWith('/api/v1/events', expect.objectContaining({ credentials: 'include' }))
+    expect(fetchMock).toHaveBeenCalledWith(`${apiUrl}/events`, expect.objectContaining({ credentials: 'include' }))
   })
 
   it('adds CSRF to mutation requests', async () => {
@@ -34,7 +36,7 @@ describe('apiRequest', () => {
 
     await expect(apiRequest('/auth/me')).resolves.toEqual({ id: 'user-1' })
 
-    expect(fetchMock).toHaveBeenNthCalledWith(2, '/api/v1/auth/refresh', {
+    expect(fetchMock).toHaveBeenNthCalledWith(2, `${apiUrl}/auth/refresh`, {
       method: 'POST',
       credentials: 'include',
     })

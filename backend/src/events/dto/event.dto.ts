@@ -1,5 +1,15 @@
 import { Type } from 'class-transformer';
-import { IsDateString, IsEnum, IsHexColor, IsInt, IsOptional, IsString, Length, Max, Min } from 'class-validator';
+import {
+  IsDateString,
+  IsEnum,
+  IsHexColor,
+  IsInt,
+  IsOptional,
+  IsString,
+  Length,
+  Max,
+  Min,
+} from 'class-validator';
 import { EventStatus } from '../../common/domain.enums';
 
 export class CreateEventDto {

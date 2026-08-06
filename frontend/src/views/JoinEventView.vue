@@ -3,7 +3,53 @@ import { KeyRound } from '@lucide/vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ApiError, apiRequest } from '../services/api'
-const code = ref(''); const error = ref(''); const loading = ref(false); const router = useRouter()
-async function submit() { loading.value = true; error.value = ''; try { const result = await apiRequest<{ event: { id: string } }>('/access-codes/redeem', { method: 'POST', body: JSON.stringify({ code: code.value }) }); await router.push(`/events/${result.event.id}/guests`) } catch (cause) { error.value = cause instanceof ApiError ? cause.message : 'No pudimos acceder' } finally { loading.value = false } }
+const code = ref('')
+const error = ref('')
+const loading = ref(false)
+const router = useRouter()
+async function submit() {
+  loading.value = true
+  error.value = ''
+  try {
+    const result = await apiRequest<{ event: { id: string } }>('/access-codes/redeem', {
+      method: 'POST',
+      body: JSON.stringify({ code: code.value }),
+    })
+    await router.push(`/events/${result.event.id}/guests`)
+  } catch (cause) {
+    error.value = cause instanceof ApiError ? cause.message : 'No pudimos acceder'
+  } finally {
+    loading.value = false
+  }
+}
 </script>
-<template><div><header class="border-b border-base-300 bg-base-100 px-6 py-7"><div class="mx-auto max-w-3xl"><p class="text-[10px] font-bold uppercase tracking-widest opacity-45">Acceso rápido</p><h1 class="font-display text-4xl">Entra con un código</h1></div></header><div class="mx-auto max-w-xl p-6 sm:p-10"><div class="card border border-base-300 bg-base-100 shadow-sm"><form class="card-body items-center text-center" @submit.prevent="submit"><div class="grid size-16 place-items-center rounded-full bg-primary/10"><KeyRound class="size-7 text-primary" /></div><h2 class="font-display text-3xl">Código del evento</h2><p class="text-sm opacity-55">Pega el código que te compartió la persona organizadora.</p><div v-if="error" class="alert alert-error mt-3 text-left">{{ error }}</div><input v-model="code" class="input input-bordered mt-3 w-full text-center text-xl font-bold uppercase tracking-widest" required placeholder="TV-AB12CD34" /><button class="btn btn-primary mt-2 w-full" :disabled="loading"><span v-if="loading" class="loading loading-spinner loading-xs"></span>Acceder al evento</button></form></div></div></div></template>
+<template>
+  <div>
+    <header class="border-b border-base-300 bg-base-100 px-6 py-7">
+      <div class="mx-auto max-w-3xl">
+        <p class="text-[10px] font-bold uppercase tracking-widest opacity-45">Acceso rápido</p>
+        <h1 class="font-display text-4xl">Entra con un código</h1>
+      </div>
+    </header>
+    <div class="mx-auto max-w-xl p-6 sm:p-10">
+      <div class="card border border-base-300 bg-base-100 shadow-sm">
+        <form class="card-body items-center text-center" @submit.prevent="submit">
+          <div class="grid size-16 place-items-center rounded-full bg-primary/10">
+            <KeyRound class="size-7 text-primary" />
+          </div>
+          <h2 class="font-display text-3xl">Código del evento</h2>
+          <p class="text-sm opacity-55">Pega el código que te compartió la persona organizadora.</p>
+          <div v-if="error" class="alert alert-error mt-3 text-left">{{ error }}</div>
+          <input
+            v-model="code"
+            class="input input-bordered mt-3 w-full text-center text-xl font-bold uppercase tracking-widest"
+            required
+            placeholder="TV-AB12CD34"
+          /><button class="btn btn-primary mt-2 w-full" :disabled="loading">
+            <span v-if="loading" class="loading loading-spinner loading-xs"></span>Acceder al evento
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>

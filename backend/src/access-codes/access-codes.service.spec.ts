@@ -5,11 +5,24 @@ describe('AccessCodesService', () => {
   it('returns plaintext only once and persists only its hash', async () => {
     const codes = {
       create: jest.fn((value) => value),
-      save: jest.fn(async (value) => ({ ...value, id: 'code-1', createdAt: new Date() })),
+      save: jest.fn(async (value) => ({
+        ...value,
+        id: 'code-1',
+        createdAt: new Date(),
+      })),
     };
-    const access = { requireRole: jest.fn().mockResolvedValue(EventRole.OWNER) };
-    const config = { getOrThrow: jest.fn().mockReturnValue('pepper-used-for-tests') };
-    const service = new AccessCodesService(codes as never, {} as never, access as never, config as never);
+    const access = {
+      requireRole: jest.fn().mockResolvedValue(EventRole.OWNER),
+    };
+    const config = {
+      getOrThrow: jest.fn().mockReturnValue('pepper-used-for-tests'),
+    };
+    const service = new AccessCodesService(
+      codes as never,
+      {} as never,
+      access as never,
+      config as never,
+    );
 
     const result = await service.create('owner-1', 'event-1', {
       role: EventRole.VIEWER,

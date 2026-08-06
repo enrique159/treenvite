@@ -13,13 +13,20 @@ export class MembersController {
   constructor(private readonly members: MembersService) {}
 
   @Get()
-  list(@CurrentUser() user: AuthenticatedUser, @Param('eventId') eventId: string) {
+  list(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('eventId') eventId: string,
+  ) {
     return this.members.list(user.id, eventId);
   }
 
   @Delete(':memberId')
   @UseGuards(CsrfGuard)
-  remove(@CurrentUser() user: AuthenticatedUser, @Param('eventId') eventId: string, @Param('memberId') memberId: string) {
+  remove(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('eventId') eventId: string,
+    @Param('memberId') memberId: string,
+  ) {
     return this.members.remove(user.id, eventId, memberId);
   }
 }

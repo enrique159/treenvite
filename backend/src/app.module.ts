@@ -20,7 +20,9 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
+        NODE_ENV: Joi.string()
+          .valid('development', 'test', 'production')
+          .default('development'),
         PORT: Joi.number().default(3000),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.number().port().default(3306),

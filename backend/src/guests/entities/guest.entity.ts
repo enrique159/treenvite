@@ -24,10 +24,13 @@ export class Guest {
   @ManyToOne(() => Event, (event) => event.guests, { onDelete: 'CASCADE' })
   event: Event;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 36, nullable: true })
   parentId: string | null;
 
-  @ManyToOne(() => Guest, (guest) => guest.children, { nullable: true, onDelete: 'RESTRICT' })
+  @ManyToOne(() => Guest, (guest) => guest.children, {
+    nullable: true,
+    onDelete: 'RESTRICT',
+  })
   parent: Guest | null;
 
   @OneToMany(() => Guest, (guest) => guest.parent)
@@ -37,10 +40,10 @@ export class Guest {
   @Column({ length: 160 })
   name: string;
 
-  @Column({ length: 190, nullable: true })
+  @Column({ type: 'varchar', length: 190, nullable: true })
   email: string | null;
 
-  @Column({ length: 40, nullable: true })
+  @Column({ type: 'varchar', length: 40, nullable: true })
   phone: string | null;
 
   @Index()

@@ -18,30 +18,73 @@ export class MailService {
           port: config.get<number>('SMTP_PORT', 587),
           secure: config.get<boolean>('SMTP_SECURE', false),
           auth: config.get<string>('SMTP_USER')
-            ? { user: config.get<string>('SMTP_USER'), pass: config.get<string>('SMTP_PASS') }
+            ? {
+                user: config.get<string>('SMTP_USER'),
+                pass: config.get<string>('SMTP_PASS'),
+              }
             : undefined,
         } as SMTPTransport.Options)
-      : nodemailer.createTransport({ jsonTransport: true } as JSONTransport.Options);
-    this.from = config.get<string>('SMTP_FROM', 'Treenvite <no-reply@treenvite.local>');
-    this.webUrl = config.get<string>('FRONTEND_ORIGIN', 'http://localhost:5173');
+      : nodemailer.createTransport({
+          jsonTransport: true,
+        } as JSONTransport.Options);
+    this.from = config.get<string>(
+      'SMTP_FROM',
+      'Treenvite <no-reply@treenvite.local>',
+    );
+    this.webUrl = config.get<string>(
+      'FRONTEND_ORIGIN',
+      'http://localhost:5173',
+    );
   }
 
-  async sendVerification(email: string, name: string, token: string): Promise<void> {
+  async sendVerification(
+    email: string,
+    name: string,
+    token: string,
+  ): Promise<void> {
     const url = `${this.webUrl}/auth/verify?token=${encodeURIComponent(token)}`;
-    await this.send(email, 'Confirma tu cuenta en Treenvite', `Hola ${name}, confirma tu cuenta: ${url}`, url);
+    await this.send(
+      email,
+      'Confirma tu cuenta en Treenvite',
+      `Hola ${name}, confirma tu cuenta: ${url}`,
+      url,
+    );
   }
 
-  async sendPasswordReset(email: string, name: string, token: string): Promise<void> {
+  async sendPasswordReset(
+    email: string,
+    name: string,
+    token: string,
+  ): Promise<void> {
     const url = `${this.webUrl}/auth/reset-password?token=${encodeURIComponent(token)}`;
-    await this.send(email, 'Restablece tu contraseña de Treenvite', `Hola ${name}, restablece tu contraseña: ${url}`, url);
+    await this.send(
+      email,
+      'Restablece tu contraseña de Treenvite',
+      `Hola ${name}, restablece tu contraseña: ${url}`,
+      url,
+    );
   }
 
-  async sendInvitation(email: string, eventName: string, token: string): Promise<void> {
+  async sendInvitation(
+    email: string,
+    eventName: string,
+    token: string,
+  ): Promise<void> {
     const url = `${this.webUrl}/invitations/${encodeURIComponent(token)}`;
-    await this.send(email, `Te invitaron a ${eventName}`, `Acepta tu invitación a ${eventName}: ${url}`, url);
+    await this.send(
+      email,
+      `Te invitaron a ${eventName}`,
+      `Acepta tu invitación a ${eventName}: ${url}`,
+      url,
+    );
   }
 
-  private async send(to: string, subject: string, text: string, actionUrl: string): Promise<void> {
+  private async send(
+    to: string,
+    subject: string,
+    text: string,
+    actionUrl: string,
+  ): Promise<void> {
     await this.transporter.sendMail({
       from: this.from,
       to,

@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { EventRole } from '../../common/domain.enums';
 import { Event } from '../../events/entities/event.entity';
 import { User } from '../../users/entities/user.entity';
@@ -19,7 +26,9 @@ export class EventAccessGrant {
   @Column()
   accessCodeId: string;
 
-  @ManyToOne(() => EventAccessCode, (code) => code.grants, { onDelete: 'CASCADE' })
+  @ManyToOne(() => EventAccessCode, (code) => code.grants, {
+    onDelete: 'CASCADE',
+  })
   accessCode: EventAccessCode;
 
   @Column()

@@ -11,13 +11,20 @@ interface JwtPayload {
   sid: string;
 }
 
+function accessCookie(request: Request): string | null {
+  const cookies = request.cookies as unknown;
+  if (!cookies || typeof cookies !== 'object') return null;
+  const values = cookies as Record<string, unknown>;
+  const token = values['__Host-tv_access'] ?? values.tv_access;
+  return typeof token === 'string' ? token : null;
+}
+
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request & { cookies?: Record<string, string> }) =>
-          request.cookies?.['__Host-tv_access'] ?? request.cookies?.tv_access ?? null,
+        (request: Request) => accessCookie(request),
       ]),
       ignoreExpiration: false,
       secretOrKey: config.getOrThrow<string>('JWT_ACCESS_SECRET'),
