@@ -4,11 +4,101 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#1f4d3e" />
-    <meta name="description" content="Treenvite: organiza invitados, relaciones y confirmaciones de tu evento en una lista o árbol visual." />
+    <meta
+      name="description"
+      content="Treenvite es una aplicación web para crear eventos, gestionar invitados en tabla o árbol, colaborar y exportar datos. El acceso con Google usa únicamente identidad básica para autenticar tu cuenta."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:site_name" content="Treenvite" />
+    <meta property="og:title" content="Treenvite — Gestión visual de invitados" />
+    <meta
+      property="og:description"
+      content="Crea eventos, organiza invitados y sus relaciones, gestiona confirmaciones y colabora con tu equipo."
+    />
+    <meta property="og:type" content="website" />
     <title>Treenvite — Invitados con sentido</title>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Treenvite",
+        "url": "https://treenvite.enriquemarin.xyz/",
+        "description": "Aplicación web para crear eventos, gestionar invitados en tabla o árbol, colaborar y exportar datos.",
+        "applicationCategory": "EventManagementApplication",
+        "operatingSystem": "Web"
+      }
+    </script>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <!--
+        Contenido público disponible antes de ejecutar JavaScript. Vue lo sustituye al iniciar.
+        Mantener este resumen alineado con src/views/HomeView.vue.
+      -->
+      <div class="min-h-screen bg-base-100 text-base-content">
+        <header class="border-b border-base-300 bg-base-100">
+          <nav class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-5" aria-label="Principal">
+            <a class="text-xl font-bold text-secondary" href="/" aria-label="Treenvite, inicio">Treenvite</a>
+            <div class="flex items-center gap-4 text-sm">
+              <a class="link link-hover" href="/privacidad">Aviso de privacidad</a>
+              <a class="btn btn-primary btn-sm" href="/auth/login">Iniciar sesión</a>
+            </div>
+          </nav>
+        </header>
+        <main class="mx-auto max-w-5xl px-5 py-14 sm:py-20">
+          <p class="text-xs font-bold uppercase tracking-[0.2em] text-primary">Invitados con sentido</p>
+          <h1 class="mt-4 max-w-4xl font-display text-4xl text-secondary sm:text-6xl">
+            Treenvite: organiza los invitados y relaciones de tu evento
+          </h1>
+          <p class="mt-6 max-w-3xl text-lg leading-8">
+            Treenvite es una aplicación web para crear y administrar eventos. Permite registrar invitados, organizar sus
+            relaciones en una tabla o árbol visual, gestionar confirmaciones y acompañantes, colaborar con otras
+            personas mediante invitaciones o códigos temporales y exportar la información en formato CSV.
+          </p>
+
+          <section class="mt-12" aria-labelledby="static-functions-title">
+            <h2 id="static-functions-title" class="font-display text-3xl text-secondary">Funciones principales</h2>
+            <ul class="mt-5 grid gap-3 text-base leading-7 sm:grid-cols-2">
+              <li>Crear y editar eventos.</li>
+              <li>Gestionar invitados, grupos, relaciones, confirmaciones, acompañantes y notas.</li>
+              <li>Alternar entre una vista de tabla y una vista de árbol.</li>
+              <li>Invitar colaboradores y compartir accesos temporales.</li>
+              <li>Consultar métricas de confirmación.</li>
+              <li>Exportar la lista de invitados en CSV.</li>
+            </ul>
+          </section>
+
+          <section
+            class="mt-12 rounded-box border border-base-300 bg-base-200 p-6"
+            aria-labelledby="static-google-title"
+          >
+            <h2 id="static-google-title" class="font-display text-3xl text-secondary">
+              Propósito del acceso con Google
+            </h2>
+            <p class="mt-4 max-w-3xl leading-7">
+              Iniciar sesión con Google es opcional. Si lo eliges, Treenvite solicita únicamente tu identificador de
+              cuenta, nombre, correo electrónico verificado y foto de perfil para crear o reconocer tu cuenta y mantener
+              tu sesión. No solicita acceso a Google Drive, Calendar, Contactos, Gmail ni a otros contenidos de tu
+              cuenta. Los datos no se venden ni se utilizan para publicidad o analítica de terceros.
+            </p>
+            <a class="link link-primary mt-5 inline-block font-semibold" href="/privacidad"
+              >Leer el aviso de privacidad</a
+            >
+          </section>
+
+          <div class="mt-10 flex flex-wrap gap-3">
+            <a class="btn btn-primary" href="/auth/register">Crear una cuenta</a>
+            <a class="btn btn-ghost" href="/auth/login">Ya tengo cuenta</a>
+          </div>
+        </main>
+        <footer class="border-t border-base-300 bg-base-200">
+          <nav class="mx-auto flex max-w-5xl flex-wrap gap-5 px-5 py-8 text-sm" aria-label="Información legal">
+            <a class="link link-hover" href="/privacidad">Aviso de privacidad</a>
+            <a class="link link-hover" href="/terminos">Términos y condiciones</a>
+          </nav>
+        </footer>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
