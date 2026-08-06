@@ -57,10 +57,10 @@ const features = [
         ></div>
         <div class="mx-auto grid max-w-7xl items-center gap-14 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-2 lg:py-28">
           <div class="max-w-2xl">
-            <p class="text-xs font-bold uppercase tracking-[0.2em] text-primary">Invitados con sentido</p>
-            <h1 class="mt-4 font-display text-5xl leading-[0.98] text-secondary sm:text-6xl lg:text-7xl">
+            <h1 class="text-2xl font-bold text-secondary">Treenvite</h1>
+            <p class="mt-4 font-display text-5xl leading-[0.98] text-secondary sm:text-6xl lg:text-7xl">
               Organiza a las personas detrás de cada evento.
-            </h1>
+            </p>
             <p class="mt-7 max-w-xl text-base leading-7 opacity-70 sm:text-lg sm:leading-8">
               Treenvite es una plataforma para crear eventos, gestionar invitados y entender cómo se relacionan entre
               sí. Trabaja en una tabla práctica o descubre la historia completa en una vista de árbol.
