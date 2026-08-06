@@ -7,7 +7,12 @@ export default defineConfig({
   plugins: [vue(), tailwindcss()],
   server: {
     proxy: {
-      '/api': 'http://localhost:3000',
+      '/api': 'http://localhost:3008',
     },
+  },
+  preview: {
+    port: 8082,
+    host: '127.0.0.1',
+    allowedHosts: ['treenvite.enriquemarin.xyz'],
   },
 })
