@@ -11,7 +11,7 @@ No existe configuración de hosting en el repositorio. Frontend y API están pre
 
 ## Backend
 
-1. Copia `backend/.env.example` a `backend/.env` y configura MySQL mediante `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` y `DB_PASSWORD`, además de los secretos, Google y SMTP.
+1. Copia `backend/.env.example` a `backend/.env` y configura MySQL mediante `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` y `DB_PASSWORD`, además de los secretos, Google y SMTP. El servidor SMTP utilizado (`mail.enriquemarin.xyz`) es un servicio independiente desplegado en este mismo VPS.
 2. Instala y arranca:
 
 ```bash
