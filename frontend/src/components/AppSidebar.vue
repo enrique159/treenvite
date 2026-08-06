@@ -16,7 +16,7 @@ async function logout() {
 
 <template>
   <aside
-    class="sticky top-0 z-20 hidden h-screen w-64 shrink-0 flex-col border-r border-base-300 bg-base-100 p-5 lg:flex"
+    class="sticky top-0 z-20 hidden h-screen w-64 min-w-0 shrink-0 flex-col border-r border-base-300 bg-base-100 p-5 lg:flex"
   >
     <RouterLink to="/events" class="px-2"><BrandMark /></RouterLink>
     <nav class="mt-12 grid gap-1" aria-label="Navegación principal">
@@ -27,9 +27,9 @@ async function logout() {
         ><KeyRound class="size-4" /> <span>Acceder con código</span></RouterLink
       >
     </nav>
-    <div class="mt-auto grid gap-3">
+    <div class="mt-auto grid min-w-0 gap-3">
       <button class="btn btn-ghost justify-start text-sm"><CircleHelp class="size-4" /> Ayuda</button>
-      <div class="flex items-center gap-2 border-t border-base-300 pt-4">
+      <div class="flex min-w-0 items-center gap-2 border-t border-base-300 pt-4">
         <RouterLink to="/account" class="flex min-w-0 flex-1 items-center gap-2 rounded-lg p-1.5 hover:bg-base-200">
           <InitialsAvatar :name="auth.user?.name || 'Treenvite'" :src="auth.user?.avatarUrl" />
           <span class="min-w-0 flex-1">
@@ -38,7 +38,7 @@ async function logout() {
           </span>
           <UserRound class="size-4 shrink-0 opacity-50" />
         </RouterLink>
-        <button class="btn btn-ghost btn-square btn-sm" aria-label="Cerrar sesión" @click="logout">
+        <button class="btn btn-ghost btn-square btn-sm shrink-0" aria-label="Cerrar sesión" @click="logout">
           <LogOut class="size-4" />
         </button>
       </div>
