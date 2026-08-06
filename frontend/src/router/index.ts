@@ -6,6 +6,18 @@ const router = createRouter({
   scrollBehavior: () => ({ top: 0 }),
   routes: [
     {
+      path: '/terminos',
+      name: 'terms',
+      component: () => import('../views/LegalView.vue'),
+      props: { kind: 'terms' },
+    },
+    {
+      path: '/privacidad',
+      name: 'privacy',
+      component: () => import('../views/LegalView.vue'),
+      props: { kind: 'privacy' },
+    },
+    {
       path: '/auth',
       component: () => import('../layouts/AuthLayout.vue'),
       meta: { guestOnly: true },
@@ -32,6 +44,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         { path: '', redirect: '/events' },
+        { path: 'account', name: 'account', component: () => import('../views/AccountSettingsView.vue') },
         { path: 'events', name: 'events', component: () => import('../views/events/EventsView.vue') },
         { path: 'events/new', name: 'event-new', component: () => import('../views/events/EventFormView.vue') },
         { path: 'events/:eventId', redirect: (route) => `/events/${String(route.params.eventId)}/guests` },

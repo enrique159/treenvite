@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CalendarDays, CircleHelp, KeyRound, LogOut } from '@lucide/vue'
+import { CalendarDays, CircleHelp, KeyRound, LogOut, UserRound } from '@lucide/vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import BrandMark from './BrandMark.vue'
@@ -30,11 +30,14 @@ async function logout() {
     <div class="mt-auto grid gap-3">
       <button class="btn btn-ghost justify-start text-sm"><CircleHelp class="size-4" /> Ayuda</button>
       <div class="flex items-center gap-2 border-t border-base-300 pt-4">
-        <InitialsAvatar :name="auth.user?.name || 'Treenvite'" :src="auth.user?.avatarUrl" />
-        <div class="min-w-0 flex-1">
-          <p class="truncate text-xs font-bold">{{ auth.user?.name }}</p>
-          <p class="truncate text-[10px] opacity-55">{{ auth.user?.email }}</p>
-        </div>
+        <RouterLink to="/account" class="flex min-w-0 flex-1 items-center gap-2 rounded-lg p-1.5 hover:bg-base-200">
+          <InitialsAvatar :name="auth.user?.name || 'Treenvite'" :src="auth.user?.avatarUrl" />
+          <span class="min-w-0 flex-1">
+            <span class="block truncate text-xs font-bold">{{ auth.user?.name }}</span>
+            <span class="block truncate text-[10px] opacity-55">{{ auth.user?.email }}</span>
+          </span>
+          <UserRound class="size-4 shrink-0 opacity-50" />
+        </RouterLink>
         <button class="btn btn-ghost btn-square btn-sm" aria-label="Cerrar sesión" @click="logout">
           <LogOut class="size-4" />
         </button>
@@ -64,12 +67,9 @@ async function logout() {
       >
         <KeyRound class="size-5" />
       </RouterLink>
-      <InitialsAvatar
-        class="ml-1 max-[360px]:hidden"
-        :name="auth.user?.name || 'Treenvite'"
-        :src="auth.user?.avatarUrl"
-        :title="auth.user?.name"
-      />
+      <RouterLink to="/account" class="ml-1 max-[360px]:hidden" aria-label="Configuración de cuenta">
+        <InitialsAvatar :name="auth.user?.name || 'Treenvite'" :src="auth.user?.avatarUrl" :title="auth.user?.name" />
+      </RouterLink>
       <button class="btn btn-ghost btn-square" aria-label="Cerrar sesión" title="Cerrar sesión" @click="logout">
         <LogOut class="size-5" />
       </button>

@@ -52,5 +52,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { user, initialized, loading, restore, login, google, logout }
+  async function clearAccount(): Promise<void> {
+    user.value = null
+    setCsrfToken('')
+  }
+
+  return { user, initialized, loading, restore, login, google, logout, clearAccount }
 })

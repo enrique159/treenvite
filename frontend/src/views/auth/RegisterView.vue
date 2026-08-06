@@ -120,6 +120,11 @@ async function google(credential: string) {
         <span v-if="loading" class="loading loading-spinner loading-xs"></span>Crear mi cuenta
       </button>
     </form>
+    <p class="mt-4 text-center text-xs leading-5 opacity-55">
+      Antes de comenzar, consulta nuestros
+      <RouterLink to="/terminos" class="link link-primary">términos y condiciones</RouterLink> y
+      <RouterLink to="/privacidad" class="link link-primary">aviso de privacidad</RouterLink>.
+    </p>
     <p class="mt-6 text-center text-sm opacity-65">
       ¿Ya tienes cuenta? <RouterLink to="/auth/login" class="link link-primary font-bold">Inicia sesión</RouterLink>
     </p>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BrandMark from '../components/BrandMark.vue'
 import InitialsAvatar from '../components/InitialsAvatar.vue'
+import LegalLinks from '../components/LegalLinks.vue'
 </script>
 
 <template>
@@ -29,11 +30,12 @@ import InitialsAvatar from '../components/InitialsAvatar.vue'
       <p class="font-display italic text-white/60">“Por fin dejamos de perdernos entre hojas de cálculo.”</p>
       <div class="absolute -bottom-52 -left-52 size-[34rem] rounded-full border border-white/10"></div>
     </section>
-    <section class="grid place-items-center bg-base-100 px-5 py-10 sm:px-8 lg:px-10">
-      <div class="w-full max-w-md">
+    <section class="flex min-h-screen flex-col bg-base-100 px-5 py-10 sm:px-8 lg:px-10">
+      <div class="m-auto w-full max-w-md">
         <BrandMark class="mb-12 lg:hidden" />
         <RouterView />
       </div>
+      <LegalLinks class="mx-auto mt-10 w-full max-w-md" />
     </section>
   </main>
 </template>
