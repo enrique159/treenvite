@@ -1,0 +1,23 @@
+<script setup lang="ts">
+import { Download, Plus, Search, UsersRound } from '@lucide/vue'
+import { computed, onMounted, ref, watch } from 'vue'
+import EventHeader from '../../components/EventHeader.vue'
+import GuestFormModal from '../../components/GuestFormModal.vue'
+import GuestTable from '../../components/GuestTable.vue'
+import { useEventContext } from '../../composables/useEventContext'
+import { ApiError, downloadCsv } from '../../services/api'
+import { useGuestsStore, type GuestPayload } from '../../stores/guests'
+import type { Guest, RsvpStatus } from '../../types'
+
+const { event, eventId } = useEventContext(); const guests = useGuestsStore()
+const search = ref(''); const rsvp = ref<'all' | RsvpStatus>('all'); const page = ref(1); const modal = ref(false); const selected = ref<Guest | null>(null); const busy = ref(false); const error = ref('')
+const params = computed(() => { const value = new URLSearchParams({ page: String(page.value), limit: '50' }); if (search.value) value.set('search', search.value); if (rsvp.value !== 'all') value.set('rsvp', rsvp.value); return value })
+let timer: ReturnType<typeof setTimeout>
+async function load() { await guests.fetchTable(eventId.value, params.value) }
+watch([search, rsvp], () => { clearTimeout(timer); timer = setTimeout(() => { page.value = 1; void load() }, 250) })
+onMounted(load)
+function open(guest: Guest | null = null) { selected.value = guest; modal.value = true; error.value = '' }
+async function save(payload: GuestPayload) { busy.value = true; try { selected.value ? await guests.update(eventId.value, selected.value.id, payload) : await guests.create(eventId.value, payload); modal.value = false; await load() } catch (cause) { error.value = cause instanceof ApiError ? cause.message : 'No pudimos guardar' } finally { busy.value = false } }
+async function remove(guest: Guest) { if (!confirm(`¿Eliminar a ${guest.name}?`)) return; busy.value = true; try { await guests.remove(eventId.value, guest.id); modal.value = false } catch (cause) { error.value = cause instanceof ApiError ? cause.message : 'No pudimos eliminar' } finally { busy.value = false } }
+</script>
+<template><div v-if="event"><EventHeader :event="event" /><div class="mx-auto max-w-7xl p-5 sm:p-8"><div v-if="error" class="alert alert-error mb-4">{{ error }}</div><section class="mb-5 grid gap-3 sm:grid-cols-3"><div class="stat rounded-xl border border-base-300 bg-base-100"><div class="stat-figure text-primary"><UsersRound /></div><div class="stat-title">Invitados</div><div class="stat-value font-display">{{ guests.total }}</div></div><div class="stat rounded-xl border border-base-300 bg-base-100"><div class="stat-title">Confirmados visibles</div><div class="stat-value font-display text-success">{{ guests.items.filter(g => g.rsvp === 'confirmed').length }}</div></div><div class="stat rounded-xl border border-base-300 bg-base-100"><div class="stat-title">Acompañantes visibles</div><div class="stat-value font-display">{{ guests.items.reduce((sum, g) => sum + g.companions, 0) }}</div></div></section><section class="overflow-hidden rounded-xl border border-base-300 bg-base-100"><div class="flex flex-wrap items-center gap-3 border-b border-base-300 p-4"><label class="input input-bordered flex min-w-56 flex-1 items-center gap-2"><Search class="size-4 opacity-40" /><input v-model="search" class="grow" placeholder="Buscar invitado…" /></label><select v-model="rsvp" class="select select-bordered"><option value="all">Todos</option><option value="confirmed">Confirmados</option><option value="pending">Pendientes</option><option value="declined">No asisten</option></select><button class="btn btn-outline" @click="downloadCsv(`/events/${eventId}/guests/export.csv`, `${event.name}-invitados.csv`)"><Download class="size-4" /><span class="max-sm:hidden">Exportar</span></button><button class="btn btn-primary" @click="open()"><Plus class="size-4" />Agregar</button></div><GuestTable :guests="guests.items" :loading="guests.loading" @edit="open" /><div v-if="!guests.loading && !guests.items.length" class="grid min-h-64 place-items-center text-center"><div><p class="font-display text-2xl">Tu lista empieza aquí</p><p class="mt-2 text-sm opacity-50">Agrega a la primera persona del evento.</p><button class="btn btn-primary mt-5" @click="open()">Agregar invitado</button></div></div></section></div><GuestFormModal :open="modal" :guest="selected" :guests="guests.items" :busy="busy" @close="modal = false" @save="save" @remove="remove" /></div><div v-else class="grid min-h-screen place-items-center"><span class="loading loading-spinner loading-lg text-primary"></span></div></template>

@@ -14,9 +14,11 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  describe('root', () => {
-    it('should return "Hello World!"', () => {
-      expect(appController.getHello()).toBe('Hello World!');
+  describe('health', () => {
+    it('should expose the API health payload', () => {
+      expect(appController.getHealth()).toEqual(
+        expect.objectContaining({ status: 'ok', service: 'treenvite-api' }),
+      );
     });
   });
 });

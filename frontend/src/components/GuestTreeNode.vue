@@ -1,68 +1,37 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { GripVertical, Plus } from '@lucide/vue'
+import type { SortableEvent } from 'sortablejs'
+import { VueDraggable } from 'vue-draggable-plus'
 import type { Guest } from '../types'
+import type { GuestTreeItem } from '../types/tree'
 
 defineOptions({ name: 'GuestTreeNode' })
+const props = defineProps<{ node: GuestTreeItem }>()
+const emit = defineEmits<{ edit: [guest: Guest]; add: [guest: Guest]; move: [guestId: string, parentId: string | null] }>()
+const initials = (name: string) => name.split(' ').slice(0, 2).map((part) => part[0]).join('').toUpperCase()
 
-const props = defineProps<{
-  guest: Guest
-  guests: Guest[]
-}>()
-
-const emit = defineEmits<{
-  edit: [guest: Guest]
-  addChild: [guest: Guest]
-}>()
-
-const children = computed(() => props.guests.filter((guest) => guest.parentId === props.guest.id))
-
-const initials = computed(() =>
-  props.guest.name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join('')
-    .toUpperCase(),
-)
-
-const statusLabel = computed(() => {
-  if (props.guest.rsvp === 'confirmed') return 'Confirmado'
-  if (props.guest.rsvp === 'declined') return 'No asiste'
-  return 'Pendiente'
-})
+function onAdd(event: SortableEvent) {
+  const guestId = (event.item as HTMLElement).dataset.guestId
+  if (guestId) emit('move', guestId, props.node.guest.id)
+}
 </script>
 
 <template>
-  <li class="tree-branch">
-    <article class="tree-node" :class="`tree-node--${guest.rsvp}`">
-      <button class="tree-node__main" type="button" @click="emit('edit', guest)">
-        <span class="avatar avatar--tree">{{ initials }}</span>
-        <span class="tree-node__copy">
-          <strong>{{ guest.name }}</strong>
-          <small>{{ guest.relation || guest.group }}</small>
-        </span>
-        <span class="status-dot" :class="`status-dot--${guest.rsvp}`" :title="statusLabel"></span>
-      </button>
-      <button
-        class="tree-node__add"
-        type="button"
-        :aria-label="`Agregar invitado relacionado con ${guest.name}`"
-        @click="emit('addChild', guest)"
-      >
-        +
-      </button>
+  <div class="flex min-w-56 flex-col items-center" :data-guest-id="node.guest.id">
+    <article class="group card w-56 border border-base-300 border-l-4 bg-base-100 shadow-sm" :class="node.guest.rsvp === 'confirmed' ? 'border-l-success' : node.guest.rsvp === 'declined' ? 'border-l-error' : 'border-l-warning'">
+      <div class="card-body flex-row items-center gap-2 p-3">
+        <GripVertical class="drag-handle size-4 cursor-grab opacity-30" />
+        <div class="avatar placeholder"><div class="w-9 rounded-full bg-accent text-xs font-bold"><span>{{ initials(node.guest.name) }}</span></div></div>
+        <button class="min-w-0 flex-1 text-left" @click="emit('edit', node.guest)"><strong class="block truncate text-xs">{{ node.guest.name }}</strong><span class="block truncate text-[10px] opacity-50">{{ node.guest.relationLabel }}</span></button>
+        <button class="btn btn-circle btn-ghost btn-xs" :aria-label="`Agregar relación a ${node.guest.name}`" @click="emit('add', node.guest)"><Plus class="size-3.5" /></button>
+      </div>
     </article>
-
-    <ul v-if="children.length" class="tree-children">
-      <GuestTreeNode
-        v-for="child in children"
-        :key="child.id"
-        :guest="child"
-        :guests="guests"
-        @edit="emit('edit', $event)"
-        @add-child="emit('addChild', $event)"
-      />
-    </ul>
-  </li>
+    <span v-if="node.children.length" class="h-7 w-px bg-base-300"></span>
+    <VueDraggable v-model="node.children" group="guest-tree" handle=".drag-handle" class="flex items-start gap-6" :animation="180" ghost-class="opacity-30" @add="onAdd">
+      <div v-for="child in node.children" :key="child.guest.id" :data-guest-id="child.guest.id" class="relative flex justify-center before:absolute before:-top-px before:left-0 before:right-0 before:h-px before:bg-base-300 first:before:left-1/2 last:before:right-1/2 only:before:hidden">
+        <span class="absolute left-1/2 top-0 h-7 w-px bg-base-300"></span>
+        <GuestTreeNode :node="child" class="pt-7" @edit="emit('edit', $event)" @add="emit('add', $event)" @move="(id, parent) => emit('move', id, parent)" />
+      </div>
+    </VueDraggable>
+  </div>
 </template>
