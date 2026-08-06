@@ -11,6 +11,17 @@ import {
 } from './dto/guest.dto';
 import { Guest } from './entities/guest.entity';
 
+function normalizeOptionalContact(
+  value: string | null | undefined,
+): string | null {
+  const normalized = value?.trim();
+  return normalized ? normalized : null;
+}
+
+function normalizeOptionalEmail(value: string | null | undefined) {
+  return normalizeOptionalContact(value)?.toLowerCase() ?? null;
+}
+
 @Injectable()
 export class GuestsService {
   constructor(
@@ -66,8 +77,8 @@ export class GuestsService {
         eventId,
         parentId: dto.parentId ?? null,
         name: dto.name.trim(),
-        email: dto.email?.trim().toLowerCase() ?? null,
-        phone: dto.phone?.trim() ?? null,
+        email: normalizeOptionalEmail(dto.email),
+        phone: normalizeOptionalContact(dto.phone),
         groupName: dto.groupName?.trim() ?? 'Sin grupo',
         relationLabel: dto.relationLabel?.trim() ?? 'Invitado',
         rsvp: dto.rsvp ?? RsvpStatus.PENDING,
@@ -107,8 +118,9 @@ export class GuestsService {
     }
     if (dto.name !== undefined) guest.name = dto.name.trim();
     if (dto.email !== undefined)
-      guest.email = dto.email?.trim().toLowerCase() ?? null;
-    if (dto.phone !== undefined) guest.phone = dto.phone?.trim() ?? null;
+      guest.email = normalizeOptionalEmail(dto.email);
+    if (dto.phone !== undefined)
+      guest.phone = normalizeOptionalContact(dto.phone);
     if (dto.groupName !== undefined) guest.groupName = dto.groupName.trim();
     if (dto.relationLabel !== undefined)
       guest.relationLabel = dto.relationLabel.trim();

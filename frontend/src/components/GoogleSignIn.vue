@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 const emit = defineEmits<{ credential: [value: string] }>()
 const container = ref<HTMLElement | null>(null)
 const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined
+let observer: ResizeObserver | undefined
+let renderedWidth = 0
 
 declare global {
   interface Window {
@@ -22,6 +24,10 @@ onMounted(() => {
   if (!clientId || !container.value) return
   const render = () => {
     if (!window.google || !container.value) return
+    const width = Math.min(420, Math.floor(container.value.getBoundingClientRect().width))
+    if (width < 200 || width === renderedWidth) return
+    renderedWidth = width
+    container.value.replaceChildren()
     window.google.accounts.id.initialize({
       client_id: clientId,
       callback: (response) => emit('credential', response.credential),
@@ -29,7 +35,7 @@ onMounted(() => {
     window.google.accounts.id.renderButton(container.value, {
       theme: 'outline',
       size: 'large',
-      width: 420,
+      width,
       text: 'continue_with',
     })
   }
@@ -41,7 +47,11 @@ onMounted(() => {
     script.onload = render
     document.head.appendChild(script)
   }
+  observer = new ResizeObserver(render)
+  observer.observe(container.value)
 })
+
+onBeforeUnmount(() => observer?.disconnect())
 </script>
 
 <template>

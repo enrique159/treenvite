@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, TransformFnParams, Type } from 'class-transformer';
 import {
   IsEmail,
   IsEnum,
@@ -7,15 +7,32 @@ import {
   IsString,
   IsUUID,
   Length,
+  Matches,
   Max,
   Min,
 } from 'class-validator';
 import { RsvpStatus } from '../../common/domain.enums';
 
+function emptyContactToNull({ value }: TransformFnParams): unknown {
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
 export class CreateGuestDto {
   @IsString() @Length(2, 160) name: string;
-  @IsOptional() @IsEmail() email?: string;
-  @IsOptional() @IsString() @Length(4, 40) phone?: string;
+  @Transform(emptyContactToNull)
+  @IsOptional()
+  @IsEmail()
+  email?: string | null;
+
+  @Transform(emptyContactToNull)
+  @IsOptional()
+  @IsString()
+  @Matches(/^\d{7,15}$/, {
+    message: 'El teléfono debe contener entre 7 y 15 dígitos',
+  })
+  phone?: string | null;
   @IsOptional() @IsString() @Length(1, 100) groupName?: string;
   @IsOptional() @IsString() @Length(1, 80) relationLabel?: string;
   @IsOptional() @IsEnum(RsvpStatus) rsvp?: RsvpStatus;
@@ -27,8 +44,18 @@ export class CreateGuestDto {
 
 export class UpdateGuestDto {
   @IsOptional() @IsString() @Length(2, 160) name?: string;
-  @IsOptional() @IsEmail() email?: string | null;
-  @IsOptional() @IsString() @Length(4, 40) phone?: string | null;
+  @Transform(emptyContactToNull)
+  @IsOptional()
+  @IsEmail()
+  email?: string | null;
+
+  @Transform(emptyContactToNull)
+  @IsOptional()
+  @IsString()
+  @Matches(/^\d{7,15}$/, {
+    message: 'El teléfono debe contener entre 7 y 15 dígitos',
+  })
+  phone?: string | null;
   @IsOptional() @IsString() @Length(1, 100) groupName?: string;
   @IsOptional() @IsString() @Length(1, 80) relationLabel?: string;
   @IsOptional() @IsEnum(RsvpStatus) rsvp?: RsvpStatus;

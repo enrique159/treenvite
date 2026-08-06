@@ -8,7 +8,7 @@ const formatDate = (value: string) =>
 <template>
   <RouterLink
     :to="`/events/${event.id}/guests`"
-    class="card border border-base-300 bg-base-100 shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+    class="card h-full border border-base-300 bg-base-100 shadow-sm transition hover:-translate-y-1 hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
   >
     <div class="card-body gap-4 p-5">
       <div class="flex items-center justify-between">
@@ -21,7 +21,9 @@ const formatDate = (value: string) =>
       </div>
       <div>
         <h2 class="font-display text-2xl">{{ event.name }}</h2>
-        <p class="mt-2 flex items-center gap-1.5 text-xs opacity-60"><MapPin class="size-3.5" />{{ event.location }}</p>
+        <p class="mt-2 flex items-center gap-1.5 text-xs opacity-60">
+          <MapPin class="size-3.5" />{{ event.location || 'Ubicación por definir' }}
+        </p>
       </div>
       <div class="mt-auto flex items-end justify-between border-t border-base-300 pt-4">
         <div>

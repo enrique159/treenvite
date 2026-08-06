@@ -29,6 +29,52 @@ describe('GuestsService', () => {
     service = module.get(GuestsService);
   });
 
+  it('persists blank contact details as null when creating a guest', async () => {
+    await service.create('user-1', 'event-1', {
+      name: 'Ana Pérez',
+      email: '   ',
+      phone: '',
+    });
+
+    expect(repository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ email: null, phone: null }),
+    );
+  });
+
+  it('normalizes non-empty contact details when creating a guest', async () => {
+    await service.create('user-1', 'event-1', {
+      name: 'Ana Pérez',
+      email: '  ANA@EXAMPLE.COM  ',
+      phone: '  6691234567  ',
+    });
+
+    expect(repository.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: 'ana@example.com',
+        phone: '6691234567',
+      }),
+    );
+  });
+
+  it('persists blank contact details as null when updating a guest', async () => {
+    repository.findOne.mockResolvedValueOnce({
+      id: 'guest-1',
+      eventId: 'event-1',
+      email: 'ana@example.com',
+      phone: '6691234567',
+      version: 1,
+    });
+
+    await service.update('user-1', 'event-1', 'guest-1', {
+      email: ' ',
+      phone: '',
+    });
+
+    expect(repository.save).toHaveBeenCalledWith(
+      expect.objectContaining({ email: null, phone: null }),
+    );
+  });
+
   it('blocks deletion while the guest has children', async () => {
     repository.findOne.mockResolvedValue({ id: 'guest-1', eventId: 'event-1' });
     repository.find.mockResolvedValue([{ id: 'child-1', name: 'Hija' }]);

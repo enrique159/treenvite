@@ -5,6 +5,7 @@ import { ref, watch } from 'vue'
 import { VueDraggable } from 'vue-draggable-plus'
 import type { Guest } from '../types'
 import type { GuestTreeItem } from '../types/tree'
+import InitialsAvatar from './InitialsAvatar.vue'
 
 defineOptions({ name: 'GuestTreeNode' })
 const props = defineProps<{ node: GuestTreeItem }>()
@@ -19,14 +20,6 @@ const emit = defineEmits<{
   add: [guest: Guest]
   move: [guestId: string, parentId: string | null]
 }>()
-const initials = (name: string) =>
-  name
-    .split(' ')
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join('')
-    .toUpperCase()
-
 function onAdd(event: SortableEvent) {
   const guestId = (event.item as HTMLElement).dataset.guestId
   if (guestId) emit('move', guestId, props.node.guest.id)
@@ -34,9 +27,9 @@ function onAdd(event: SortableEvent) {
 </script>
 
 <template>
-  <div class="flex min-w-56 flex-col items-center" :data-guest-id="node.guest.id">
+  <div class="flex min-w-48 flex-col items-center sm:min-w-56" :data-guest-id="node.guest.id">
     <article
-      class="group card w-56 border border-base-300 border-l-4 bg-base-100 shadow-sm"
+      class="group card w-48 border border-base-300 border-l-4 bg-base-100 shadow-sm sm:w-56"
       :class="
         node.guest.rsvp === 'confirmed'
           ? 'border-l-success'
@@ -46,22 +39,23 @@ function onAdd(event: SortableEvent) {
       "
     >
       <div class="card-body flex-row items-center gap-2 p-3">
-        <GripVertical class="drag-handle size-4 cursor-grab opacity-30" />
-        <div class="avatar placeholder">
-          <div class="w-9 rounded-full bg-accent text-xs font-bold">
-            <span>{{ initials(node.guest.name) }}</span>
-          </div>
-        </div>
+        <button
+          class="drag-handle grid size-10 shrink-0 cursor-grab place-items-center rounded-lg opacity-45 hover:bg-base-200"
+          aria-label="Arrastrar relación"
+        >
+          <GripVertical class="size-4" />
+        </button>
+        <InitialsAvatar :name="node.guest.name" />
         <button class="min-w-0 flex-1 text-left" @click="emit('edit', node.guest)">
           <strong class="block truncate text-xs">{{ node.guest.name }}</strong
           ><span class="block truncate text-[10px] opacity-50">{{ node.guest.relationLabel }}</span>
         </button>
         <button
-          class="btn btn-circle btn-ghost btn-xs"
+          class="btn btn-circle btn-ghost"
           :aria-label="`Agregar relación a ${node.guest.name}`"
           @click="emit('add', node.guest)"
         >
-          <Plus class="size-3.5" />
+          <Plus class="size-4" />
         </button>
       </div>
     </article>
@@ -70,7 +64,7 @@ function onAdd(event: SortableEvent) {
       v-model="children"
       group="guest-tree"
       handle=".drag-handle"
-      class="flex items-start gap-6"
+      class="flex items-start gap-4 sm:gap-6"
       :animation="180"
       ghost-class="opacity-30"
       @add="onAdd"

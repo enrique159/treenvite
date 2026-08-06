@@ -39,14 +39,14 @@ function onRootAdd(event: SortableEvent) {
 
 <template>
   <div
-    class="min-h-[34rem] overflow-auto bg-[radial-gradient(circle,var(--color-base-300)_1px,transparent_1px)] bg-[size:20px_20px] p-8"
+    class="min-h-[26rem] overflow-auto bg-[radial-gradient(circle,var(--color-base-300)_1px,transparent_1px)] bg-[size:20px_20px] p-4 sm:min-h-[34rem] sm:p-8"
   >
     <div v-if="hasGuests" class="mx-auto w-max min-w-full">
       <VueDraggable
         v-model="roots"
         group="guest-tree"
         handle=".drag-handle"
-        class="flex items-start justify-center gap-10"
+        class="flex items-start justify-center gap-5 sm:gap-10"
         :animation="180"
         @add="onRootAdd"
       >

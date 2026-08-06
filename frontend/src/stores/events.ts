@@ -44,5 +44,11 @@ export const useEventsStore = defineStore('events', () => {
     return current.value
   }
 
-  return { items, current, loading, fetchAll, fetchOne, create, update }
+  async function remove(id: string): Promise<void> {
+    await apiRequest(`/events/${id}`, { method: 'DELETE' })
+    items.value = items.value.filter((event) => event.id !== id)
+    if (current.value?.id === id) current.value = null
+  }
+
+  return { items, current, loading, fetchAll, fetchOne, create, update, remove }
 })

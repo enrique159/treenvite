@@ -8,25 +8,25 @@ onMounted(() => events.fetchAll())
 </script>
 <template>
   <div>
-    <header class="border-b border-base-300 bg-base-100 px-6 py-7 sm:px-10">
-      <div class="mx-auto flex max-w-7xl items-end justify-between gap-5">
+    <header class="border-b border-base-300 bg-base-100 px-4 py-6 sm:px-6 lg:px-8">
+      <div class="mx-auto flex w-full max-w-7xl flex-col items-start justify-between gap-5 sm:flex-row sm:items-end">
         <div>
           <p class="text-[10px] font-bold uppercase tracking-[.2em] opacity-45">Tu espacio</p>
-          <h1 class="mt-1 font-display text-4xl">Mis eventos</h1>
+          <h1 class="mt-1 font-display text-4xl leading-none">Mis eventos</h1>
         </div>
-        <div class="flex gap-2">
-          <RouterLink to="/join" class="btn btn-outline max-sm:btn-square"
-            ><KeyRound class="size-4" /><span class="max-sm:hidden">Acceder con código</span></RouterLink
+        <div class="grid w-full grid-cols-[auto_1fr] gap-2 sm:flex sm:w-auto">
+          <RouterLink to="/join" class="btn btn-outline"
+            ><KeyRound class="size-4" /><span class="max-[420px]:hidden">Acceder con código</span></RouterLink
           ><RouterLink to="/events/new" class="btn btn-primary"><Plus class="size-4" />Crear evento</RouterLink>
         </div>
       </div>
     </header>
-    <div class="mx-auto max-w-7xl p-6 sm:p-10">
+    <div class="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <section class="hero min-h-60 overflow-hidden rounded-2xl bg-secondary text-secondary-content">
-        <div class="hero-content w-full justify-start p-8 sm:p-12">
+        <div class="hero-content w-full justify-start p-6 sm:p-10 lg:p-12">
           <div class="max-w-2xl">
             <p class="text-xs font-bold uppercase tracking-[.2em] text-primary">Tu próxima celebración</p>
-            <h2 class="mt-3 font-display text-4xl sm:text-5xl">Todo empieza con una persona.</h2>
+            <h2 class="mt-3 font-display text-4xl leading-tight sm:text-5xl">Todo empieza con una persona.</h2>
             <p class="mt-4 max-w-lg text-sm leading-6 text-white/65">
               Crea tu evento, reúne a tu gente y deja que las relaciones tomen forma.
             </p>
@@ -34,7 +34,7 @@ onMounted(() => events.fetchAll())
           </div>
         </div>
       </section>
-      <div class="mb-5 mt-10 flex items-center gap-4">
+      <div class="mb-5 mt-8 flex items-center gap-4 sm:mt-10">
         <h2 class="font-display text-2xl">Tus eventos</h2>
         <span class="badge badge-ghost">{{ events.items.length }}</span
         ><span class="h-px flex-1 bg-base-300"></span>

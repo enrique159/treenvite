@@ -1,33 +1,58 @@
 <script setup lang="ts">
+import useVuelidate from '@vuelidate/core'
+import { email as emailValidator, helpers, maxLength, minLength, required } from '@vuelidate/validators'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import FormFieldError from '../../components/FormFieldError.vue'
 import GoogleSignIn from '../../components/GoogleSignIn.vue'
 import { ApiError, apiRequest } from '../../services/api'
 import { useAuthStore } from '../../stores/auth'
-import { useRouter } from 'vue-router'
+import { useToastsStore } from '../../stores/toasts'
 
 const form = ref({ name: '', email: '', password: '' })
 const loading = ref(false)
-const error = ref('')
 const sent = ref(false)
 const auth = useAuthStore()
+const toasts = useToastsStore()
 const router = useRouter()
+const rules = {
+  name: {
+    required: helpers.withMessage('El nombre es obligatorio.', required),
+    minLength: helpers.withMessage('El nombre debe tener al menos 2 caracteres.', minLength(2)),
+    maxLength: helpers.withMessage('El nombre no puede superar los 120 caracteres.', maxLength(120)),
+  },
+  email: {
+    required: helpers.withMessage('El correo electrónico es obligatorio.', required),
+    email: helpers.withMessage('Escribe un correo electrónico válido.', emailValidator),
+  },
+  password: {
+    required: helpers.withMessage('La contraseña es obligatoria.', required),
+    minLength: helpers.withMessage('La contraseña debe tener al menos 8 caracteres.', minLength(8)),
+  },
+}
+const v$ = useVuelidate(rules, form)
 
 async function submit() {
+  if (!(await v$.value.$validate())) return
+
   loading.value = true
-  error.value = ''
   try {
     await apiRequest('/auth/register', { method: 'POST', body: JSON.stringify(form.value) })
     sent.value = true
   } catch (cause) {
-    error.value = cause instanceof ApiError ? cause.message : 'No pudimos crear la cuenta'
+    toasts.error(cause instanceof ApiError ? cause.message : 'No pudimos crear la cuenta')
   } finally {
     loading.value = false
   }
 }
 
 async function google(credential: string) {
-  await auth.google(credential)
-  await router.push('/events')
+  try {
+    await auth.google(credential)
+    await router.push('/events')
+  } catch (cause) {
+    toasts.error(cause instanceof ApiError ? cause.message : 'No pudimos crear la cuenta con Google')
+  }
 }
 </script>
 
@@ -43,26 +68,54 @@ async function google(credential: string) {
     <p class="mt-2 text-sm opacity-60">Tu primer evento está a unos pasos.</p>
     <GoogleSignIn class="mt-8" @credential="google" />
     <div class="divider my-6 text-[10px] uppercase opacity-50">o continúa con correo</div>
-    <div v-if="error" class="alert alert-error mb-4 text-sm">{{ error }}</div>
-    <form class="grid gap-4" @submit.prevent="submit">
-      <label class="form-control"
-        ><span class="label-text mb-1.5 text-xs font-semibold">Nombre completo</span
-        ><input v-model="form.name" class="input input-bordered w-full" required minlength="2" autocomplete="name"
-      /></label>
-      <label class="form-control"
-        ><span class="label-text mb-1.5 text-xs font-semibold">Correo electrónico</span
-        ><input v-model="form.email" class="input input-bordered w-full" required type="email" autocomplete="email"
-      /></label>
-      <label class="form-control"
-        ><span class="label-text mb-1.5 text-xs font-semibold">Contraseña</span
-        ><input
+    <form class="grid gap-4" novalidate @submit.prevent="submit">
+      <div class="grid gap-1.5">
+        <label for="register-name" class="text-xs font-semibold">Nombre completo</label>
+        <input
+          id="register-name"
+          v-model="form.name"
+          class="input w-full"
+          :class="{ 'input-error': v$.name.$error }"
+          autocomplete="name"
+          aria-required="true"
+          :aria-invalid="v$.name.$error"
+          :aria-describedby="v$.name.$error ? 'register-name-error' : undefined"
+          @blur="v$.name.$touch()"
+        />
+        <FormFieldError id="register-name-error" :errors="v$.name.$errors" />
+      </div>
+      <div class="grid gap-1.5">
+        <label for="register-email" class="text-xs font-semibold">Correo electrónico</label>
+        <input
+          id="register-email"
+          v-model="form.email"
+          class="input w-full"
+          :class="{ 'input-error': v$.email.$error }"
+          type="email"
+          autocomplete="email"
+          aria-required="true"
+          :aria-invalid="v$.email.$error"
+          :aria-describedby="v$.email.$error ? 'register-email-error' : undefined"
+          @blur="v$.email.$touch()"
+        />
+        <FormFieldError id="register-email-error" :errors="v$.email.$errors" />
+      </div>
+      <div class="grid gap-1.5">
+        <label for="register-password" class="text-xs font-semibold">Contraseña</label>
+        <input
+          id="register-password"
           v-model="form.password"
-          class="input input-bordered w-full"
-          required
-          minlength="8"
+          class="input w-full"
+          :class="{ 'input-error': v$.password.$error }"
           type="password"
           autocomplete="new-password"
-      /></label>
+          aria-required="true"
+          :aria-invalid="v$.password.$error"
+          :aria-describedby="v$.password.$error ? 'register-password-error' : undefined"
+          @blur="v$.password.$touch()"
+        />
+        <FormFieldError id="register-password-error" :errors="v$.password.$errors" />
+      </div>
       <button class="btn btn-primary mt-2" :disabled="loading">
         <span v-if="loading" class="loading loading-spinner loading-xs"></span>Crear mi cuenta
       </button>
