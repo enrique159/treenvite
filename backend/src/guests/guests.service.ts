@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApiException } from '../common/api-exception';
-import { EventRole, RsvpStatus } from '../common/domain.enums';
+import { EventRole, GuestSide, RsvpStatus } from '../common/domain.enums';
 import { EventAccessService } from '../events/event-access.service';
 import {
   CreateGuestDto,
@@ -10,6 +10,7 @@ import {
   UpdateGuestDto,
 } from './dto/guest.dto';
 import { Guest } from './entities/guest.entity';
+import { RelationSuggestionsService } from './relation-suggestions.service';
 
 function normalizeOptionalContact(
   value: string | null | undefined,
@@ -27,6 +28,7 @@ export class GuestsService {
   constructor(
     @InjectRepository(Guest) private readonly guests: Repository<Guest>,
     private readonly access: EventAccessService,
+    private readonly relationSuggestions: RelationSuggestionsService,
   ) {}
 
   async list(userId: string, eventId: string, query: GuestListQueryDto) {
@@ -72,6 +74,10 @@ export class GuestsService {
   ): Promise<Guest> {
     await this.access.requireRole(eventId, userId, EventRole.EDITOR);
     await this.validateParent(eventId, dto.parentId ?? null);
+    const relationLabel = await this.relationSuggestions.resolve(
+      eventId,
+      dto.relationLabel ?? 'Invitado',
+    );
     return this.guests.save(
       this.guests.create({
         eventId,
@@ -80,7 +86,8 @@ export class GuestsService {
         email: normalizeOptionalEmail(dto.email),
         phone: normalizeOptionalContact(dto.phone),
         groupName: dto.groupName?.trim() ?? 'Sin grupo',
-        relationLabel: dto.relationLabel?.trim() ?? 'Invitado',
+        relationLabel,
+        invitedBySide: dto.invitedBySide ?? null,
         rsvp: dto.rsvp ?? RsvpStatus.PENDING,
         companions: dto.companions ?? 0,
         dietary: dto.dietary?.trim() ?? null,
@@ -123,7 +130,12 @@ export class GuestsService {
       guest.phone = normalizeOptionalContact(dto.phone);
     if (dto.groupName !== undefined) guest.groupName = dto.groupName.trim();
     if (dto.relationLabel !== undefined)
-      guest.relationLabel = dto.relationLabel.trim();
+      guest.relationLabel = await this.relationSuggestions.resolve(
+        eventId,
+        dto.relationLabel,
+      );
+    if (dto.invitedBySide !== undefined)
+      guest.invitedBySide = dto.invitedBySide;
     if (dto.rsvp !== undefined) guest.rsvp = dto.rsvp;
     if (dto.companions !== undefined) guest.companions = dto.companions;
     if (dto.dietary !== undefined) guest.dietary = dto.dietary?.trim() ?? null;
@@ -178,6 +190,11 @@ export class GuestsService {
         guest.phone,
         guest.groupName,
         guest.relationLabel,
+        guest.invitedBySide === GuestSide.GROOM
+          ? 'Novio'
+          : guest.invitedBySide === GuestSide.BRIDE
+            ? 'Novia'
+            : '',
         status[guest.rsvp],
         guest.companions,
         guest.dietary,
@@ -186,7 +203,7 @@ export class GuestsService {
         .map(escape)
         .join(','),
     );
-    return `\uFEFF${['Nombre', 'Correo', 'Teléfono', 'Grupo', 'Relación', 'Confirmación', 'Acompañantes', 'Alimentación', 'Notas'].map(escape).join(',')}\n${rows.join('\n')}`;
+    return `\uFEFF${['Nombre', 'Correo', 'Teléfono', 'Grupo', 'Relación', 'Por parte de', 'Confirmación', 'Acompañantes', 'Alimentación', 'Notas'].map(escape).join(',')}\n${rows.join('\n')}`;
   }
 
   private async validateParent(

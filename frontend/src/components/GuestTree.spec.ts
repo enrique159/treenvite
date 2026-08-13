@@ -12,6 +12,7 @@ const guest = (id: string, parentId: string | null): Guest => ({
   phone: null,
   groupName: 'Familia',
   relationLabel: 'Familiar',
+  invitedBySide: null,
   rsvp: 'pending',
   companions: 0,
   dietary: null,

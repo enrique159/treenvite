@@ -21,4 +21,9 @@ describe('static homepage fallback', () => {
   it('links to the same public privacy path used by the OAuth consent screen', () => {
     expect(homepage).toContain('href="/privacidad"')
   })
+
+  it('publishes favicon and Apple touch icon metadata', () => {
+    expect(homepage).toContain('rel="icon" href="/favicon.svg"')
+    expect(homepage).toContain('rel="apple-touch-icon" href="/apple-touch-icon.png"')
+  })
 })

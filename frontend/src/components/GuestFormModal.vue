@@ -2,19 +2,23 @@
 import useVuelidate from '@vuelidate/core'
 import { between, email, helpers, integer, maxLength, minLength, required } from '@vuelidate/validators'
 import { nextTick, reactive, watch } from 'vue'
-import { GUEST_GROUP_OPTIONS, GUEST_RELATION_OPTIONS } from '../constants/guest-options'
-import type { Guest, RsvpStatus } from '../types'
+import { GUEST_GROUP_OPTIONS } from '../constants/guest-options'
+import type { Guest, GuestSide, RsvpStatus } from '../types'
 import type { GuestPayload } from '../stores/guests'
 import EditableCombobox from './EditableCombobox.vue'
 import FormFieldError from './FormFieldError.vue'
 
-const props = defineProps<{
-  open: boolean
-  guest: Guest | null
-  guests: Guest[]
-  parentId?: string | null
-  busy?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    open: boolean
+    guest: Guest | null
+    guests: Guest[]
+    relationOptions?: string[]
+    parentId?: string | null
+    busy?: boolean
+  }>(),
+  { relationOptions: () => [], parentId: null, busy: false },
+)
 const emit = defineEmits<{ close: []; save: [payload: GuestPayload]; remove: [guest: Guest] }>()
 
 interface GuestFormState {
@@ -23,6 +27,7 @@ interface GuestFormState {
   phone: string
   groupName: string
   relationLabel: string
+  invitedBySide: GuestSide | ''
   rsvp: RsvpStatus
   companions: number
   dietary: string
@@ -36,6 +41,7 @@ const form = reactive<GuestFormState>({
   phone: '',
   groupName: '',
   relationLabel: '',
+  invitedBySide: '',
   rsvp: 'pending',
   companions: 0,
   dietary: '',
@@ -60,6 +66,10 @@ const rules = {
   },
   relationLabel: {
     maxLength: helpers.withMessage('La relación no puede superar 80 caracteres.', maxLength(80)),
+    letters: helpers.withMessage(
+      'Usa únicamente letras y espacios.',
+      (value: string) => !value || value === props.guest?.relationLabel || /^\p{L}+(?:\s+\p{L}+)*$/u.test(value),
+    ),
   },
   companions: {
     required: helpers.withMessage('Indica el número de acompañantes.', required),
@@ -80,6 +90,7 @@ watch(
       phone: guest?.phone ?? '',
       groupName: guest?.groupName ?? '',
       relationLabel: guest?.relationLabel ?? '',
+      invitedBySide: guest?.invitedBySide ?? '',
       rsvp: guest?.rsvp ?? ('pending' as RsvpStatus),
       companions: guest?.companions ?? 0,
       dietary: guest?.dietary ?? '',
@@ -100,19 +111,22 @@ function maskPhone(event: Event): void {
 
 async function submit(): Promise<void> {
   if (!(await v$.value.$validate())) return
-  emit('save', {
+  const relationLabel = form.relationLabel.trim() || 'Invitado'
+  const payload: GuestPayload = {
     name: form.name.trim(),
     email: form.email.trim() || null,
     phone: form.phone || null,
     groupName: form.groupName.trim() || 'Sin grupo',
-    relationLabel: form.relationLabel.trim() || 'Invitado',
+    invitedBySide: form.invitedBySide || null,
     rsvp: form.rsvp,
     companions: form.companions,
     dietary: form.dietary.trim() || null,
     notes: form.notes.trim() || null,
     parentId: form.parentId,
     version: props.guest?.version,
-  })
+  }
+  if (!props.guest || relationLabel !== props.guest.relationLabel) payload.relationLabel = relationLabel
+  emit('save', payload)
 }
 </script>
 
@@ -196,17 +210,25 @@ async function submit(): Promise<void> {
             id="guest-relation"
             v-model="form.relationLabel"
             label="relación"
-            :options="GUEST_RELATION_OPTIONS"
+            :options="relationOptions"
             placeholder="Selecciona o escribe una relación"
             :invalid="v$.relationLabel.$error"
             described-by="guest-relation-help guest-relation-error"
             @blur="v$.relationLabel.$touch()"
           />
           <span id="guest-relation-help" class="text-[11px] opacity-50"
-            >También puedes escribir una relación nueva.</span
+            >También puedes escribir una relación nueva usando sólo letras y espacios.</span
           >
           <FormFieldError id="guest-relation-error" :errors="v$.relationLabel.$errors" />
         </div>
+        <label class="grid gap-1.5"
+          ><span class="text-xs font-semibold">Por parte de</span
+          ><select v-model="form.invitedBySide" class="select w-full">
+            <option value="">Sin especificar</option>
+            <option value="groom">Novio</option>
+            <option value="bride">Novia</option>
+          </select></label
+        >
         <label class="grid gap-1.5"
           ><span class="text-xs font-semibold">Relacionado con</span
           ><select v-model="form.parentId" class="select w-full">

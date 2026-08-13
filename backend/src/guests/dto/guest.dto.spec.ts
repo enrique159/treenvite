@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
 import { CreateGuestDto, UpdateGuestDto } from './guest.dto';
+import { GuestSide } from '../../common/domain.enums';
 
 describe('Guest contact DTOs', () => {
   it('accepts omitted or blank contact details and normalizes blanks to null', async () => {
@@ -56,4 +57,28 @@ describe('Guest contact DTOs', () => {
 
     await expect(validate(dto)).resolves.toHaveLength(0);
   });
+
+  it('accepts a guest side and normalizes whitespace in a relation', async () => {
+    const dto = plainToInstance(CreateGuestDto, {
+      name: 'Ana Pérez',
+      invitedBySide: GuestSide.BRIDE,
+      relationLabel: '  amistad   de universidad  ',
+    });
+
+    await expect(validate(dto)).resolves.toHaveLength(0);
+    expect(dto.relationLabel).toBe('amistad de universidad');
+  });
+
+  it.each(['grooms', 'Amigo/a', 'Amigo 1'])(
+    'rejects invalid side or relation input: %s',
+    async (value) => {
+      const dto = plainToInstance(CreateGuestDto, {
+        name: 'Ana Pérez',
+        invitedBySide: value,
+        relationLabel: value,
+      });
+
+      await expect(validate(dto)).resolves.not.toHaveLength(0);
+    },
+  );
 });

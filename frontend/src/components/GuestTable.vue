@@ -5,6 +5,7 @@ import InitialsAvatar from './InitialsAvatar.vue'
 defineProps<{ guests: Guest[]; loading?: boolean }>()
 const emit = defineEmits<{ edit: [guest: Guest] }>()
 const status: Record<RsvpStatus, string> = { confirmed: 'Confirmado', pending: 'Pendiente', declined: 'No asiste' }
+const side = { groom: 'Novio', bride: 'Novia' } as const
 </script>
 <template>
   <div v-if="loading" class="grid min-h-48 place-items-center">
@@ -22,7 +23,8 @@ const status: Record<RsvpStatus, string> = { confirmed: 'Confirmado', pending: '
         <span class="min-w-0">
           <strong class="block truncate text-sm">{{ guest.name }}</strong>
           <span class="mt-0.5 block truncate text-xs opacity-55"
-            >{{ guest.relationLabel }} · {{ guest.groupName }}</span
+            >{{ guest.relationLabel }} · {{ guest.invitedBySide ? side[guest.invitedBySide] : 'Sin parte' }} ·
+            {{ guest.groupName }}</span
           >
         </span>
         <span
@@ -45,6 +47,7 @@ const status: Record<RsvpStatus, string> = { confirmed: 'Confirmado', pending: '
             <th>Invitado</th>
             <th>Grupo</th>
             <th>Relación</th>
+            <th>Por parte de</th>
             <th>Confirmación</th>
             <th>Acomp.</th>
             <th></th>
@@ -70,6 +73,7 @@ const status: Record<RsvpStatus, string> = { confirmed: 'Confirmado', pending: '
               <span class="badge badge-ghost badge-sm">{{ guest.groupName }}</span>
             </td>
             <td>{{ guest.relationLabel }}</td>
+            <td>{{ guest.invitedBySide ? side[guest.invitedBySide] : '—' }}</td>
             <td>
               <span
                 class="badge badge-sm"

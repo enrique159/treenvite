@@ -12,6 +12,7 @@ const guest: Guest = {
   phone: null,
   groupName: 'Familia',
   relationLabel: 'Anfitriona',
+  invitedBySide: 'bride',
   rsvp: 'confirmed',
   companions: 1,
   dietary: null,
@@ -23,6 +24,7 @@ describe('GuestTable', () => {
   it('renders and selects a guest', async () => {
     const wrapper = mount(GuestTable, { props: { guests: [guest] } })
     expect(wrapper.text()).toContain('Ana Torres')
+    expect(wrapper.text()).toContain('Novia')
     await wrapper.find('tbody tr').trigger('click')
     expect(wrapper.emitted('edit')?.[0]?.[0]).toEqual(guest)
   })

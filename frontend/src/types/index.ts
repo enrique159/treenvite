@@ -1,6 +1,7 @@
 export type EventRole = 'viewer' | 'editor' | 'owner'
 export type EventStatus = 'draft' | 'active' | 'finished'
 export type RsvpStatus = 'pending' | 'confirmed' | 'declined'
+export type GuestSide = 'groom' | 'bride'
 
 export interface User {
   id: string
@@ -34,6 +35,7 @@ export interface Guest {
   phone: string | null
   groupName: string
   relationLabel: string
+  invitedBySide: GuestSide | null
   rsvp: RsvpStatus
   companions: number
   dietary: string | null

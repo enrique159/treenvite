@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
-import { RsvpStatus } from '../../common/domain.enums';
+import { GuestSide, RsvpStatus } from '../../common/domain.enums';
 import { Event } from '../../events/entities/event.entity';
 
 @Entity('guests')
@@ -52,6 +52,10 @@ export class Guest {
 
   @Column({ length: 80, default: 'Invitado' })
   relationLabel: string;
+
+  @Index()
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  invitedBySide: GuestSide | null;
 
   @Index()
   @Column({ type: 'varchar', length: 20, default: RsvpStatus.PENDING })

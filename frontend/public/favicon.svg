@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Treenvite">
+  <rect width="120" height="120" rx="24" fill="#fdfaf4" />
+  <path d="M60 14c13 12 15 27 0 42C45 41 47 26 60 14Z" fill="#f06449" />
+  <path d="M23 44c18-3 32 4 36 24-21 4-34-5-36-24Z" fill="#f06449" />
+  <path d="M97 44c-18-3-32 4-36 24 21 4 34-5 36-24Z" fill="#f06449" />
+  <path d="M60 65v30M60 80 48 68M60 80l12-12" fill="none" stroke="#1f4d3e" stroke-linecap="round" stroke-width="7" />
+</svg>

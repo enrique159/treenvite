@@ -20,6 +20,7 @@ const emit = defineEmits<{
   add: [guest: Guest]
   move: [guestId: string, parentId: string | null]
 }>()
+const side = { groom: 'Novio', bride: 'Novia' } as const
 function onAdd(event: SortableEvent) {
   const guestId = (event.item as HTMLElement).dataset.guestId
   if (guestId) emit('move', guestId, props.node.guest.id)
@@ -48,7 +49,10 @@ function onAdd(event: SortableEvent) {
         <InitialsAvatar :name="node.guest.name" />
         <button class="min-w-0 flex-1 text-left" @click="emit('edit', node.guest)">
           <strong class="block truncate text-xs">{{ node.guest.name }}</strong
-          ><span class="block truncate text-[10px] opacity-50">{{ node.guest.relationLabel }}</span>
+          ><span class="block truncate text-[10px] opacity-50"
+            >{{ node.guest.relationLabel
+            }}{{ node.guest.invitedBySide ? ` · ${side[node.guest.invitedBySide]}` : '' }}</span
+          >
         </button>
         <button
           class="btn btn-circle btn-ghost"

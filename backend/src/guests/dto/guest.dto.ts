@@ -11,12 +11,16 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { RsvpStatus } from '../../common/domain.enums';
+import { GuestSide, RsvpStatus } from '../../common/domain.enums';
 
 function emptyContactToNull({ value }: TransformFnParams): unknown {
   if (typeof value !== 'string') return value;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
+}
+
+function normalizeWords({ value }: TransformFnParams): unknown {
+  return typeof value === 'string' ? value.trim().replace(/\s+/g, ' ') : value;
 }
 
 export class CreateGuestDto {
@@ -34,7 +38,15 @@ export class CreateGuestDto {
   })
   phone?: string | null;
   @IsOptional() @IsString() @Length(1, 100) groupName?: string;
-  @IsOptional() @IsString() @Length(1, 80) relationLabel?: string;
+  @Transform(normalizeWords)
+  @IsOptional()
+  @IsString()
+  @Length(1, 80)
+  @Matches(/^\p{L}+(?: \p{L}+)*$/u, {
+    message: 'La relación sólo puede contener letras y espacios',
+  })
+  relationLabel?: string;
+  @IsOptional() @IsEnum(GuestSide) invitedBySide?: GuestSide | null;
   @IsOptional() @IsEnum(RsvpStatus) rsvp?: RsvpStatus;
   @IsOptional() @IsInt() @Min(0) @Max(20) companions?: number;
   @IsOptional() @IsString() dietary?: string;
@@ -57,7 +69,15 @@ export class UpdateGuestDto {
   })
   phone?: string | null;
   @IsOptional() @IsString() @Length(1, 100) groupName?: string;
-  @IsOptional() @IsString() @Length(1, 80) relationLabel?: string;
+  @Transform(normalizeWords)
+  @IsOptional()
+  @IsString()
+  @Length(1, 80)
+  @Matches(/^\p{L}+(?: \p{L}+)*$/u, {
+    message: 'La relación sólo puede contener letras y espacios',
+  })
+  relationLabel?: string;
+  @IsOptional() @IsEnum(GuestSide) invitedBySide?: GuestSide | null;
   @IsOptional() @IsEnum(RsvpStatus) rsvp?: RsvpStatus;
   @IsOptional() @IsInt() @Min(0) @Max(20) companions?: number;
   @IsOptional() @IsString() dietary?: string | null;

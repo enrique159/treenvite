@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { apiRequest } from '../services/api'
-import type { Guest, Paginated, RsvpStatus } from '../types'
+import type { Guest, GuestSide, Paginated, RsvpStatus } from '../types'
 
 export interface GuestPayload {
   name?: string
@@ -9,6 +9,7 @@ export interface GuestPayload {
   phone?: string | null
   groupName?: string
   relationLabel?: string
+  invitedBySide?: GuestSide | null
   rsvp?: RsvpStatus
   companions?: number
   dietary?: string | null
@@ -21,6 +22,20 @@ export const useGuestsStore = defineStore('guests', () => {
   const items = ref<Guest[]>([])
   const total = ref(0)
   const loading = ref(false)
+  const relationSuggestions = ref<string[]>([])
+
+  function mergeRelationSuggestion(label: string): void {
+    if (!relationSuggestions.value.some((option) => option.localeCompare(label, 'es', { sensitivity: 'base' }) === 0)) {
+      relationSuggestions.value = [...relationSuggestions.value, label].sort((left, right) =>
+        left.localeCompare(right, 'es'),
+      )
+    }
+  }
+
+  async function fetchRelationSuggestions(eventId: string): Promise<void> {
+    relationSuggestions.value = []
+    relationSuggestions.value = await apiRequest<string[]>(`/events/${eventId}/guests/relation-suggestions`)
+  }
 
   async function fetchTable(eventId: string, params: URLSearchParams): Promise<void> {
     loading.value = true
@@ -49,6 +64,7 @@ export const useGuestsStore = defineStore('guests', () => {
       body: JSON.stringify(payload),
     })
     items.value.push(guest)
+    mergeRelationSuggestion(guest.relationLabel)
     total.value += 1
     return guest
   }
@@ -60,6 +76,7 @@ export const useGuestsStore = defineStore('guests', () => {
     })
     const index = items.value.findIndex((item) => item.id === guestId)
     if (index >= 0) items.value[index] = guest
+    mergeRelationSuggestion(guest.relationLabel)
     return guest
   }
 
@@ -69,5 +86,16 @@ export const useGuestsStore = defineStore('guests', () => {
     total.value -= 1
   }
 
-  return { items, total, loading, fetchTable, fetchTree, create, update, remove }
+  return {
+    items,
+    total,
+    loading,
+    relationSuggestions,
+    fetchTable,
+    fetchTree,
+    fetchRelationSuggestions,
+    create,
+    update,
+    remove,
+  }
 })

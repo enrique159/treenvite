@@ -15,6 +15,7 @@ import { EventAccessCode } from '../../access-codes/entities/event-access-code.e
 import { EventInvitation } from '../../invitations/entities/event-invitation.entity';
 import { EventMember } from '../../members/entities/event-member.entity';
 import { Guest } from '../../guests/entities/guest.entity';
+import { RelationSuggestion } from '../../guests/entities/relation-suggestion.entity';
 import { User } from '../../users/entities/user.entity';
 
 @Entity('events')
@@ -58,6 +59,9 @@ export class Event {
 
   @OneToMany(() => Guest, (guest) => guest.event)
   guests: Guest[];
+
+  @OneToMany(() => RelationSuggestion, (suggestion) => suggestion.event)
+  relationSuggestions: RelationSuggestion[];
 
   @VersionColumn()
   version: number;

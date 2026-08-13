@@ -31,3 +31,8 @@ export enum RsvpStatus {
   CONFIRMED = 'confirmed',
   DECLINED = 'declined',
 }
+
+export enum GuestSide {
+  GROOM = 'groom',
+  BRIDE = 'bride',
+}

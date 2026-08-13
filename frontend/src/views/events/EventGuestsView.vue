@@ -43,6 +43,13 @@ watch([search, rsvp], () => {
   }, 250)
 })
 onMounted(load)
+onMounted(async () => {
+  try {
+    await guests.fetchRelationSuggestions(eventId.value)
+  } catch (cause) {
+    toasts.error(cause instanceof ApiError ? cause.message : 'No pudimos cargar las relaciones sugeridas')
+  }
+})
 function open(guest: Guest | null = null) {
   selected.value = guest
   modal.value = true
@@ -148,6 +155,7 @@ async function exportGuests() {
       :open="modal"
       :guest="selected"
       :guests="guests.items"
+      :relation-options="guests.relationSuggestions"
       :busy="busy"
       @close="modal = false"
       @save="save"

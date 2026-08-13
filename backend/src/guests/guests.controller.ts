@@ -22,12 +22,16 @@ import {
   UpdateGuestDto,
 } from './dto/guest.dto';
 import { GuestsService } from './guests.service';
+import { RelationSuggestionsService } from './relation-suggestions.service';
 
 @ApiTags('guests')
 @Controller('events/:eventId/guests')
 @UseGuards(JwtAuthGuard)
 export class GuestsController {
-  constructor(private readonly guests: GuestsService) {}
+  constructor(
+    private readonly guests: GuestsService,
+    private readonly relationSuggestions: RelationSuggestionsService,
+  ) {}
 
   @Get()
   list(
@@ -44,6 +48,14 @@ export class GuestsController {
     @Param('eventId') eventId: string,
   ) {
     return this.guests.tree(user.id, eventId);
+  }
+
+  @Get('relation-suggestions')
+  suggestions(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('eventId') eventId: string,
+  ) {
+    return this.relationSuggestions.list(user.id, eventId);
   }
 
   @Get('export.csv')

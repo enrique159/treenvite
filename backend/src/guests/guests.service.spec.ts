@@ -5,6 +5,7 @@ import { ApiException } from '../common/api-exception';
 import { EventAccessService } from '../events/event-access.service';
 import { Guest } from './entities/guest.entity';
 import { GuestsService } from './guests.service';
+import { RelationSuggestionsService } from './relation-suggestions.service';
 
 describe('GuestsService', () => {
   const repository = {
@@ -15,6 +16,11 @@ describe('GuestsService', () => {
     create: jest.fn((value) => value),
   };
   const access = { requireRole: jest.fn().mockResolvedValue('editor') };
+  const relationSuggestions = {
+    resolve: jest.fn((_eventId: string, value: string) =>
+      Promise.resolve(value),
+    ),
+  };
   let service: GuestsService;
 
   beforeEach(async () => {
@@ -24,6 +30,7 @@ describe('GuestsService', () => {
         GuestsService,
         { provide: getRepositoryToken(Guest), useValue: repository },
         { provide: EventAccessService, useValue: access },
+        { provide: RelationSuggestionsService, useValue: relationSuggestions },
       ],
     }).compile();
     service = module.get(GuestsService);

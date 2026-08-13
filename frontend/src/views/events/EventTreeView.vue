@@ -27,6 +27,13 @@ async function loadTree() {
   }
 }
 onMounted(loadTree)
+onMounted(async () => {
+  try {
+    await guests.fetchRelationSuggestions(eventId.value)
+  } catch (cause) {
+    toasts.error(cause instanceof ApiError ? cause.message : 'No pudimos cargar las relaciones sugeridas')
+  }
+})
 function open(guest: Guest | null = null, parent: Guest | null = null) {
   selected.value = guest
   parentId.value = parent?.id ?? null
@@ -126,6 +133,7 @@ async function confirmRemove() {
       :open="modal"
       :guest="selected"
       :guests="guests.items"
+      :relation-options="guests.relationSuggestions"
       :parent-id="parentId"
       :busy="busy"
       @close="modal = false"
