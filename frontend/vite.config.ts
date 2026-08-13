@@ -13,6 +13,6 @@ export default defineConfig({
   preview: {
     port: 8082,
     host: '127.0.0.1',
-    allowedHosts: ['treenvite.enriquemarin.xyz'],
+    allowedHosts: ['treenvite.click', 'treenvite.enriquemarin.xyz'],
   },
 })

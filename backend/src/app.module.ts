@@ -32,6 +32,7 @@ import { UsersModule } from './users/users.module';
         DB_USER: Joi.string().required(),
         DB_PASSWORD: Joi.string().allow('').default(''),
         FRONTEND_ORIGIN: Joi.string().uri().default('http://localhost:5173'),
+        FRONTEND_ORIGINS: Joi.string().allow('').default(''),
         JWT_ACCESS_SECRET: Joi.string().min(32).required(),
         ACCESS_CODE_PEPPER: Joi.string().min(16).required(),
         API_TOKEN_PEPPER: Joi.string().min(32).required(),
