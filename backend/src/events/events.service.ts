@@ -1,7 +1,8 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, IsNull, Repository } from 'typeorm';
 import { EventAccessGrant } from '../access-codes/entities/event-access-grant.entity';
+import { ApiToken } from '../api-tokens/entities/api-token.entity';
 import { ApiException } from '../common/api-exception';
 import { EventRole, EventStatus } from '../common/domain.enums';
 import { EventMember } from '../members/entities/event-member.entity';
@@ -21,6 +22,8 @@ export class EventsService {
     private readonly members: Repository<EventMember>,
     @InjectRepository(EventAccessGrant)
     private readonly grants: Repository<EventAccessGrant>,
+    @InjectRepository(ApiToken)
+    private readonly apiTokens: Repository<ApiToken>,
     private readonly access: EventAccessService,
   ) {}
 
@@ -108,7 +111,13 @@ export class EventsService {
   async remove(userId: string, id: string): Promise<{ message: string }> {
     await this.access.requireRole(id, userId, EventRole.OWNER);
     const event = await this.events.findOne({ where: { id } });
-    if (event) await this.events.softRemove(event);
+    if (event) {
+      await this.apiTokens.update(
+        { eventId: id, revokedAt: IsNull() },
+        { revokedAt: new Date() },
+      );
+      await this.events.softRemove(event);
+    }
     return { message: 'Evento eliminado' };
   }
 }

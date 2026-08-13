@@ -16,5 +16,6 @@ import { RelationSuggestionsService } from './relation-suggestions.service';
   ],
   controllers: [GuestsController],
   providers: [GuestsService, RelationSuggestionsService],
+  exports: [GuestsService],
 })
 export class GuestsModule {}

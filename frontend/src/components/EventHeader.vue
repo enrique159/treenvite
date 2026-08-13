@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Network, Settings, Table2 } from '@lucide/vue'
+import { ArrowLeft, Braces, Network, Settings, Table2 } from '@lucide/vue'
 import type { EventItem } from '../types'
 defineProps<{ event: EventItem }>()
 </script>
@@ -18,7 +18,11 @@ defineProps<{ event: EventItem }>()
         <p class="text-[10px] font-bold uppercase tracking-widest opacity-45">{{ event.type }}</p>
         <h1 class="truncate font-display text-xl sm:text-2xl">{{ event.name }}</h1>
       </div>
-      <div role="tablist" class="tabs tabs-box grid w-full grid-cols-3 bg-base-200 p-1 sm:ml-auto sm:flex sm:w-auto">
+      <div
+        role="tablist"
+        class="tabs tabs-box grid w-full bg-base-200 p-1 sm:ml-auto sm:flex sm:w-auto"
+        :class="event.role === 'owner' ? 'grid-cols-4' : 'grid-cols-3'"
+      >
         <RouterLink :to="`/events/${event.id}/guests`" class="tab min-w-0 gap-1 text-xs" active-class="tab-active"
           ><Table2 class="size-3.5" /> Lista</RouterLink
         >
@@ -27,6 +31,13 @@ defineProps<{ event: EventItem }>()
         >
         <RouterLink :to="`/events/${event.id}/settings`" class="tab min-w-0 gap-1 text-xs" active-class="tab-active"
           ><Settings class="size-3.5" /> Ajustes</RouterLink
+        >
+        <RouterLink
+          v-if="event.role === 'owner'"
+          :to="`/events/${event.id}/api`"
+          class="tab min-w-0 gap-1 text-xs"
+          active-class="tab-active"
+          ><Braces class="size-3.5" /> API</RouterLink
         >
       </div>
     </div>

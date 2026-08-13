@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, In, Repository } from 'typeorm';
 import { EventAccessGrant } from '../access-codes/entities/event-access-grant.entity';
 import { EventAccessCode } from '../access-codes/entities/event-access-code.entity';
+import { ApiToken } from '../api-tokens/entities/api-token.entity';
 import { ApiException } from '../common/api-exception';
 import { Event } from '../events/entities/event.entity';
 import { Guest } from '../guests/entities/guest.entity';
@@ -54,6 +55,7 @@ export class UsersService {
       const codes = manager.getRepository(EventAccessCode);
       const members = manager.getRepository(EventMember);
       const invitations = manager.getRepository(EventInvitation);
+      const apiTokens = manager.getRepository(ApiToken);
 
       if (eventIds.length) {
         // Guest.parent has RESTRICT, so detach the tree before removing its rows.
@@ -62,6 +64,7 @@ export class UsersService {
         await codes.delete({ eventId: In(eventIds) });
         await members.delete({ eventId: In(eventIds) });
         await invitations.delete({ eventId: In(eventIds) });
+        await apiTokens.delete({ eventId: In(eventIds) });
         await guests.delete({ eventId: In(eventIds) });
         // delete() intentionally hard-deletes soft-deleted events too.
         await events.delete({ id: In(eventIds) });
@@ -72,6 +75,7 @@ export class UsersService {
       await invitations.delete({ email: user.email });
       await grants.delete({ userId });
       await members.delete({ userId });
+      await apiTokens.delete({ createdById: userId });
       await manager.getRepository(RefreshSession).delete({ userId });
       await manager.getRepository(AuthToken).delete({ userId });
       await manager.getRepository(AuthIdentity).delete({ userId });

@@ -14,7 +14,13 @@ async function bootstrap() {
   const frontendOrigin = config.getOrThrow<string>('FRONTEND_ORIGIN');
 
   app.setGlobalPrefix('api/v1');
-  app.use(helmet());
+  const apiHeaders = helmet();
+  const documentationHeaders = helmet({ contentSecurityPolicy: false });
+  app.use((request: Request, response: Response, next: NextFunction) => {
+    const isDocumentation = request.path.startsWith('/api/internal-docs');
+    const headers = isDocumentation ? documentationHeaders : apiHeaders;
+    headers(request, response, next);
+  });
   app.use(cookieParser());
   app.enableCors({
     origin: frontendOrigin,
@@ -22,7 +28,13 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'X-CSRF-Token'],
   });
   app.use((request: Request, response: Response, next: NextFunction) => {
-    if (!['GET', 'HEAD', 'OPTIONS'].includes(request.method)) {
+    const isIntegrationRequest =
+      request.path === '/api/v1/integrations' ||
+      request.path.startsWith('/api/v1/integrations/');
+    if (
+      !isIntegrationRequest &&
+      !['GET', 'HEAD', 'OPTIONS'].includes(request.method)
+    ) {
       const origin = request.header('origin');
       if (origin !== frontendOrigin) {
         response.status(403).json({
@@ -46,15 +58,15 @@ async function bootstrap() {
   app.useGlobalFilters(new ApiExceptionFilter());
 
   if (config.get<string>('NODE_ENV') !== 'production') {
-    const swagger = new DocumentBuilder()
-      .setTitle('Treenvite API')
+    const internalSwagger = new DocumentBuilder()
+      .setTitle('Treenvite API interna')
       .setVersion('1.0')
       .addCookieAuth('tv_access')
       .build();
     SwaggerModule.setup(
-      'api/docs',
+      'api/internal-docs',
       app,
-      SwaggerModule.createDocument(app, swagger),
+      SwaggerModule.createDocument(app, internalSwagger),
     );
   }
 

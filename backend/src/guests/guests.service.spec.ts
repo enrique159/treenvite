@@ -13,6 +13,7 @@ describe('GuestsService', () => {
     find: jest.fn(),
     remove: jest.fn(),
     save: jest.fn(),
+    update: jest.fn().mockResolvedValue({ affected: 1 }),
     create: jest.fn((value) => value),
   };
   const access = { requireRole: jest.fn().mockResolvedValue('editor') };
@@ -64,7 +65,7 @@ describe('GuestsService', () => {
   });
 
   it('persists blank contact details as null when updating a guest', async () => {
-    repository.findOne.mockResolvedValueOnce({
+    repository.findOne.mockResolvedValue({
       id: 'guest-1',
       eventId: 'event-1',
       email: 'ana@example.com',
@@ -77,7 +78,8 @@ describe('GuestsService', () => {
       phone: '',
     });
 
-    expect(repository.save).toHaveBeenCalledWith(
+    expect(repository.update).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'guest-1', version: 1 }),
       expect.objectContaining({ email: null, phone: null }),
     );
   });

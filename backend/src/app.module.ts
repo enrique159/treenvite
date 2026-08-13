@@ -5,12 +5,14 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Joi from 'joi';
 import { AccessCodesModule } from './access-codes/access-codes.module';
+import { ApiTokensModule } from './api-tokens/api-tokens.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { EventsModule } from './events/events.module';
 import { GuestsModule } from './guests/guests.module';
 import { InvitationsModule } from './invitations/invitations.module';
+import { IntegrationsModule } from './integrations/integrations.module';
 import { MailModule } from './mail/mail.module';
 import { MembersModule } from './members/members.module';
 import { UsersModule } from './users/users.module';
@@ -32,6 +34,7 @@ import { UsersModule } from './users/users.module';
         FRONTEND_ORIGIN: Joi.string().uri().default('http://localhost:5173'),
         JWT_ACCESS_SECRET: Joi.string().min(32).required(),
         ACCESS_CODE_PEPPER: Joi.string().min(16).required(),
+        API_TOKEN_PEPPER: Joi.string().min(32).required(),
         COOKIE_SECURE: Joi.boolean().when('NODE_ENV', {
           is: 'production',
           then: Joi.valid(true).required(),
@@ -70,6 +73,8 @@ import { UsersModule } from './users/users.module';
     InvitationsModule,
     AccessCodesModule,
     GuestsModule,
+    ApiTokensModule,
+    IntegrationsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

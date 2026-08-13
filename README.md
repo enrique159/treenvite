@@ -20,15 +20,21 @@ yarn
 yarn start:dev
 ```
 
-La API queda en `http://localhost:3000/api/v1` y Swagger en `http://localhost:3000/api/docs`. TypeORM usa `synchronize: true`; no existen migraciones y el esquema se ajusta automáticamente al iniciar. Usa una base respaldada al cambiar entidades.
+La API queda en `http://localhost:3000/api/v1`. La documentación pública para integraciones forma parte del frontend en `/documentacion/api`; Swagger se conserva únicamente para inspección interna durante desarrollo en `http://localhost:3000/api/internal-docs`. TypeORM usa `synchronize: true`; no existen migraciones y el esquema se ajusta automáticamente al iniciar. Usa una base respaldada al cambiar entidades.
+
+Configura `API_TOKEN_PEPPER` con un valor aleatorio de al menos 32 caracteres antes de iniciar. Los propietarios pueden crear tokens ligados a un evento desde su pestaña **API**. Las integraciones usan `Authorization: Bearer tv_api_...` contra `/api/v1/integrations/guests`; los secretos se muestran una sola vez y están pensados exclusivamente para comunicación servidor a servidor.
 
 Verificación:
 
 ```bash
 yarn build
 yarn test --runInBand
-TEST_DB_HOST=127.0.0.1 TEST_DB_PORT=3306 TEST_DB_NAME=treenvite_test TEST_DB_USER=treenvite TEST_DB_PASSWORD=... yarn test:e2e
+cp .env.test.example .env.test
+# Edita .env.test con el usuario y contraseña de la base treenvite_test.
+yarn test:e2e --runInBand
 ```
+
+Jest carga `backend/.env.test` automáticamente antes de evaluar las pruebas. El archivo está ignorado por Git para evitar publicar credenciales; `.env.test.example` conserva la lista de variables requeridas.
 
 ## Frontend
 
@@ -41,7 +47,7 @@ yarn
 yarn dev
 ```
 
-En desarrollo, Vite redirige `/api` a `http://localhost:3000`. Para otro dominio configura `VITE_API_URL` con la URL completa terminada en `/api/v1`.
+Al ejecutar `yarn dev`, Vite carga `frontend/.env.local`, que puede apuntar directamente a `http://localhost:3333/api/v1`. El archivo está ignorado por Git. Si se usa la ruta relativa `/api/v1`, el proxy de desarrollo también redirige a `http://localhost:3333`. Durante `yarn build`, `.env.production` conserva la URL pública y evita incorporar localhost al bundle.
 
 Verificación:
 

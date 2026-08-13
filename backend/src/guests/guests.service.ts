@@ -33,6 +33,10 @@ export class GuestsService {
 
   async list(userId: string, eventId: string, query: GuestListQueryDto) {
     await this.access.requireRole(eventId, userId, EventRole.VIEWER);
+    return this.listForEvent(eventId, query);
+  }
+
+  async listForEvent(eventId: string, query: GuestListQueryDto) {
     const builder = this.guests
       .createQueryBuilder('guest')
       .where('guest.eventId = :eventId', { eventId });
@@ -56,10 +60,30 @@ export class GuestsService {
     const direction = query.direction.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
     builder
       .orderBy(`guest.${allowedSort}`, direction)
+      .addOrderBy('guest.id', 'ASC')
       .skip((query.page - 1) * query.limit)
       .take(query.limit);
     const [items, total] = await builder.getManyAndCount();
-    return { items, page: query.page, limit: query.limit, total };
+    return {
+      items,
+      page: query.page,
+      limit: query.limit,
+      total,
+      totalPages: Math.ceil(total / query.limit),
+    };
+  }
+
+  async getForEvent(eventId: string, guestId: string): Promise<Guest> {
+    const guest = await this.guests.findOne({
+      where: { id: guestId, eventId },
+    });
+    if (!guest)
+      throw new ApiException(
+        HttpStatus.NOT_FOUND,
+        'GUEST_NOT_FOUND',
+        'El invitado no existe',
+      );
+    return guest;
   }
 
   async tree(userId: string, eventId: string): Promise<Guest[]> {
@@ -103,15 +127,15 @@ export class GuestsService {
     dto: UpdateGuestDto,
   ): Promise<Guest> {
     await this.access.requireRole(eventId, userId, EventRole.EDITOR);
-    const guest = await this.guests.findOne({
-      where: { id: guestId, eventId },
-    });
-    if (!guest)
-      throw new ApiException(
-        HttpStatus.NOT_FOUND,
-        'GUEST_NOT_FOUND',
-        'El invitado no existe',
-      );
+    return this.updateForEvent(eventId, guestId, dto);
+  }
+
+  async updateForEvent(
+    eventId: string,
+    guestId: string,
+    dto: UpdateGuestDto,
+  ): Promise<Guest> {
+    const guest = await this.getForEvent(eventId, guestId);
     if (dto.version && dto.version !== guest.version) {
       throw new ApiException(
         HttpStatus.CONFLICT,
@@ -140,7 +164,30 @@ export class GuestsService {
     if (dto.companions !== undefined) guest.companions = dto.companions;
     if (dto.dietary !== undefined) guest.dietary = dto.dietary?.trim() ?? null;
     if (dto.notes !== undefined) guest.notes = dto.notes?.trim() ?? null;
-    return this.guests.save(guest);
+    const result = await this.guests.update(
+      { id: guest.id, eventId, version: guest.version },
+      {
+        parentId: guest.parentId,
+        name: guest.name,
+        email: guest.email,
+        phone: guest.phone,
+        groupName: guest.groupName,
+        relationLabel: guest.relationLabel,
+        invitedBySide: guest.invitedBySide,
+        rsvp: guest.rsvp,
+        companions: guest.companions,
+        dietary: guest.dietary,
+        notes: guest.notes,
+      },
+    );
+    if (result.affected !== 1) {
+      throw new ApiException(
+        HttpStatus.CONFLICT,
+        'GUEST_VERSION_CONFLICT',
+        'El invitado cambió desde que lo abriste',
+      );
+    }
+    return this.getForEvent(eventId, guestId);
   }
 
   async remove(userId: string, eventId: string, guestId: string) {

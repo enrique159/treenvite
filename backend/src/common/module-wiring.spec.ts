@@ -1,6 +1,7 @@
 import { MODULE_METADATA } from '@nestjs/common/constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccessCodesModule } from '../access-codes/access-codes.module';
+import { ApiTokensModule } from '../api-tokens/api-tokens.module';
 import { AuthModule } from '../auth/auth.module';
 import { EventsModule } from '../events/events.module';
 import { GuestsModule } from '../guests/guests.module';
@@ -15,6 +16,7 @@ describe('protected module wiring', () => {
     MembersModule,
     InvitationsModule,
     AccessCodesModule,
+    ApiTokensModule,
     GuestsModule,
   ])(
     '%s imports AuthModule so authentication guards can resolve dependencies',

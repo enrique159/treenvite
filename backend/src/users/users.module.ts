@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventAccessGrant } from '../access-codes/entities/event-access-grant.entity';
 import { EventAccessCode } from '../access-codes/entities/event-access-code.entity';
+import { ApiToken } from '../api-tokens/entities/api-token.entity';
 import { AuthModule } from '../auth/auth.module';
 import { AuthIdentity } from '../auth/entities/auth-identity.entity';
 import { AuthToken } from '../auth/entities/auth-token.entity';
@@ -27,6 +28,7 @@ import { UsersService } from './users.service';
       EventInvitation,
       EventAccessCode,
       EventAccessGrant,
+      ApiToken,
     ]),
     AuthModule,
   ],

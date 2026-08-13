@@ -36,3 +36,8 @@ export enum GuestSide {
   GROOM = 'groom',
   BRIDE = 'bride',
 }
+
+export enum ApiTokenPermission {
+  READ = 'read',
+  READ_WRITE = 'read_write',
+}

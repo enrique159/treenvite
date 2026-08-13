@@ -23,6 +23,11 @@ const router = createRouter({
       props: { kind: 'privacy' },
     },
     {
+      path: '/documentacion/api',
+      name: 'api-docs',
+      component: () => import('../views/ApiDocumentationView.vue'),
+    },
+    {
       path: '/auth',
       component: () => import('../layouts/AuthLayout.vue'),
       meta: { guestOnly: true },
@@ -65,6 +70,11 @@ const router = createRouter({
           path: ':eventId/settings',
           name: 'event-settings',
           component: () => import('../views/events/EventSettingsView.vue'),
+        },
+        {
+          path: ':eventId/api',
+          name: 'event-api',
+          component: () => import('../views/events/EventApiView.vue'),
         },
       ],
     },

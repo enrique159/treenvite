@@ -12,6 +12,7 @@ withDefaults(
     :class="['flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs opacity-65', $props.class]"
     aria-label="Información legal"
   >
+    <RouterLink to="/documentacion/api" class="link link-hover">Documentación API</RouterLink>
     <RouterLink to="/terminos" class="link link-hover">Términos y condiciones</RouterLink>
     <RouterLink to="/privacidad" class="link link-hover">Aviso de privacidad</RouterLink>
   </nav>

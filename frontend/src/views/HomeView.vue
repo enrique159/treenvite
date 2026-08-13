@@ -39,6 +39,7 @@ const features = [
         </RouterLink>
         <div class="hidden items-center gap-7 text-sm font-medium md:flex">
           <a href="#funciones" class="link link-hover">Funciones</a>
+          <RouterLink to="/documentacion/api" class="link link-hover">API</RouterLink>
           <a href="#datos-de-google" class="link link-hover">Datos de Google</a>
           <RouterLink to="/privacidad" class="link link-hover">Privacidad</RouterLink>
         </div>

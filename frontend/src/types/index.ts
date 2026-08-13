@@ -2,6 +2,8 @@ export type EventRole = 'viewer' | 'editor' | 'owner'
 export type EventStatus = 'draft' | 'active' | 'finished'
 export type RsvpStatus = 'pending' | 'confirmed' | 'declined'
 export type GuestSide = 'groom' | 'bride'
+export type ApiTokenPermission = 'read' | 'read_write'
+export type ApiTokenStatus = 'active' | 'expired' | 'revoked'
 
 export interface User {
   id: string
@@ -48,6 +50,22 @@ export interface Paginated<T> {
   page: number
   limit: number
   total: number
+}
+
+export interface ApiTokenItem {
+  id: string
+  name: string
+  tokenSuffix: string
+  permission: ApiTokenPermission
+  status: ApiTokenStatus
+  expiresAt: string | null
+  revokedAt: string | null
+  lastUsedAt: string | null
+  createdAt: string
+}
+
+export interface CreatedApiToken extends ApiTokenItem {
+  token: string
 }
 
 export interface ApiErrorBody {
