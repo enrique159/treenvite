@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useAuthStore } from '../stores/auth'
+import BrandMark from '../components/BrandMark.vue'
 
 const props = defineProps<{
   kind: 'terms' | 'privacy'
@@ -21,7 +22,7 @@ const intro = computed(() =>
     <header class="border-b border-base-300 bg-base-100">
       <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <RouterLink :to="auth.user ? '/events' : '/'" aria-label="Volver a Treenvite">
-          <span class="font-display text-2xl text-secondary">Treen<span class="text-primary">vite</span></span>
+          <BrandMark />
         </RouterLink>
         <RouterLink :to="auth.user ? '/events' : '/'" class="btn btn-ghost btn-sm">
           {{ auth.user ? 'Volver a la plataforma' : 'Volver al inicio' }}

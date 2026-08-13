@@ -4,7 +4,7 @@ import LegalLinks from '../components/LegalLinks.vue'
 </script>
 
 <template>
-  <div class="min-h-screen lg:flex">
+  <div class="min-h-screen md:flex">
     <AppSidebar />
     <main class="flex min-w-0 flex-1 flex-col">
       <div class="min-w-0 flex-1"><RouterView /></div>

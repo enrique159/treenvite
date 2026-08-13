@@ -52,7 +52,7 @@ const features = [
     <main>
       <section class="relative isolate">
         <div
-          class="pointer-events-none absolute -right-48 -top-48 -z-10 size-[34rem] rounded-full bg-primary/10 blur-3xl"
+          class="pointer-events-none absolute -right-48 -top-48 -z-10 size-136 rounded-full bg-primary/10 blur-3xl"
           aria-hidden="true"
         ></div>
         <div class="mx-auto grid max-w-7xl items-center gap-14 px-5 py-16 sm:px-8 sm:py-24 lg:grid-cols-2 lg:py-28">
@@ -79,7 +79,7 @@ const features = [
           </div>
 
           <div class="relative mx-auto w-full max-w-xl" aria-label="Ejemplo de organización de invitados">
-            <div class="absolute -inset-5 -z-10 rotate-2 rounded-[2rem] bg-secondary/8"></div>
+            <div class="absolute -inset-5 -z-10 rotate-2 rounded-4xl bg-secondary/8"></div>
             <div class="card overflow-hidden border border-base-300 bg-base-100 shadow-2xl shadow-secondary/10">
               <div class="flex items-center justify-between border-b border-base-300 bg-base-200/70 px-5 py-4">
                 <div>
@@ -209,7 +209,7 @@ const features = [
 
       <section class="px-5 pb-16 sm:px-8 sm:pb-24">
         <div
-          class="mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-secondary px-6 py-12 text-center text-secondary-content sm:px-12"
+          class="mx-auto max-w-6xl overflow-hidden rounded-4xl bg-secondary px-6 py-12 text-center text-secondary-content sm:px-12"
         >
           <p class="text-xs font-bold uppercase tracking-[0.2em] text-primary">Tu evento, más claro</p>
           <h2 class="mx-auto mt-3 max-w-2xl font-display text-4xl sm:text-5xl">Empieza a organizar a tus invitados.</h2>

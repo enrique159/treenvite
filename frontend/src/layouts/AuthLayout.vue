@@ -9,7 +9,9 @@ import LegalLinks from '../components/LegalLinks.vue'
     <section
       class="relative hidden overflow-hidden bg-secondary p-10 text-secondary-content lg:flex lg:flex-col lg:justify-between xl:p-12"
     >
-      <BrandMark class="[&_span:last-child]:text-white" />
+      <RouterLink to="/" aria-label="Volver a Treenvite">
+        <BrandMark class="[&_span:last-child]:text-white" />
+      </RouterLink>
       <div class="relative z-10 mx-auto max-w-xl">
         <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-primary">Invitaciones con sentido</p>
         <h1 class="font-display text-5xl leading-[1.02] xl:text-6xl">
@@ -28,7 +30,7 @@ import LegalLinks from '../components/LegalLinks.vue'
         </div>
       </div>
       <p class="font-display italic text-white/60">“Por fin dejamos de perdernos entre hojas de cálculo.”</p>
-      <div class="absolute -bottom-52 -left-52 size-[34rem] rounded-full border border-white/10"></div>
+      <div class="absolute -bottom-52 -left-52 size-136 rounded-full border border-white/10"></div>
     </section>
     <section class="flex min-h-screen flex-col bg-base-100 px-5 py-10 sm:px-8 lg:px-10">
       <div class="m-auto w-full max-w-md">
