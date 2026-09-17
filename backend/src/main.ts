@@ -12,6 +12,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
   const frontendOrigin = config.getOrThrow<string>('FRONTEND_ORIGIN');
+  const frontendOrigins = Array.from(
+    new Set(
+      `${config.get<string>('FRONTEND_ORIGINS', '')},${frontendOrigin}`
+        .split(',')
+        .map((origin) => origin.trim())
+        .filter(Boolean),
+    ),
+  );
 
   app.setGlobalPrefix('api/v1');
   const apiHeaders = helmet();
@@ -23,7 +31,7 @@ async function bootstrap() {
   });
   app.use(cookieParser());
   app.enableCors({
-    origin: frontendOrigin,
+    origin: frontendOrigins,
     credentials: true,
     allowedHeaders: ['Content-Type', 'X-CSRF-Token'],
   });
@@ -36,7 +44,7 @@ async function bootstrap() {
       !['GET', 'HEAD', 'OPTIONS'].includes(request.method)
     ) {
       const origin = request.header('origin');
-      if (origin !== frontendOrigin) {
+      if (!origin || !frontendOrigins.includes(origin)) {
         response.status(403).json({
           statusCode: 403,
           code: 'ORIGIN_NOT_ALLOWED',
